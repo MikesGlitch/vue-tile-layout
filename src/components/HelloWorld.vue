@@ -1,6 +1,7 @@
 <template>
   <div>
     {{ msg }}
+    DON'T FORGET TO TAKE FROM THE VUE3 BRANCH OF VUE-GRID-LAYOUT
   </div>
 </template>
 
