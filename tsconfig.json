@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "allowJs": true, // TODO - turn me off later
     "target": "esnext",
     "module": "esnext",
     "strict": true,

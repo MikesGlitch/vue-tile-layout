@@ -10,7 +10,14 @@
   },
   "dependencies": {
     "core-js": "^3.6.5",
-    "vue": "^3.0.0"
+    "vue": "^3.0.0",    
+    "@interactjs/actions": "^1.10.2",
+    "@interactjs/auto-start": "^1.10.2",
+    "@interactjs/dev-tools": "^1.10.2",
+    "@interactjs/interactjs": "^1.10.2",
+    "@interactjs/modifiers": "^1.10.2",
+    "element-resize-detector": "^1.2.1",
+    "mitt": "^2.1.0"
   },
   "devDependencies": {
     "@types/jest": "^24.0.19",
