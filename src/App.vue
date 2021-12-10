@@ -17,7 +17,16 @@
       :h="item.h"
       :i="item.i"
     >
-      <span>{{ item.i }}</span>
+      <div
+        style="
+          width: 100%;
+          height: 100%;
+          text-align: center;
+          border: 1px solid black;
+        "
+      >
+        <span>{{ item.i }}</span>
+      </div>
     </grid-item>
   </grid-layout>
 
