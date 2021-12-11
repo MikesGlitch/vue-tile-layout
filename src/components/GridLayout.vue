@@ -25,6 +25,7 @@ import {
   onMounted,
   ref,
   reactive,
+  provide,
 } from 'vue'
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const elementResizeDetectorMaker = require('element-resize-detector')
@@ -43,20 +44,9 @@ import {
   getColsFromBreakpoint,
   findOrGenerateResponsiveLayout,
 } from '@/helpers/responsiveUtils'
-//var eventBus = require('./eventBus');
 
 import GridItem from './GridItem.vue'
-import {
-  addWindowEventListener,
-  removeWindowEventListener,
-} from '@/helpers/DOM'
-
-// provide() {
-//   return {
-//     eventBus: this.eventBus,
-//     layout: this,
-//   }
-// },
+import { addWindowEventListener, removeWindowEventListener } from '@/helpers/DOM'
 
 const props = defineProps({
   // If true, the container height swells and contracts to fit contents
@@ -139,6 +129,8 @@ const props = defineProps({
 })
 
 const eventBus = mitt()
+provide('eventBus', eventBus)
+provide('layout', props)
 const width = ref(null)
 const mergedStyle = ref({})
 let lastLayoutLength = 0
@@ -163,11 +155,7 @@ const emit = defineEmits<{
   (e: 'layout-before-mount', layout: Array<unknown> | null): void
   (e: 'layout-mounted', layout: Array<unknown> | null): void
   (e: 'layout-updated', layout: Array<unknown> | null): void
-  (
-    e: 'breakpoint-changed',
-    newBreakpoint: string,
-    layout: Array<unknown> | null
-  ): void
+  (e: 'breakpoint-changed', newBreakpoint: string, layout: Array<unknown> | null): void
 }>()
 
 watch(
@@ -215,35 +203,27 @@ watch(
 
 watch(
   () => props.colNum,
-  (val) => {
-    eventBus.emit('setColNum', val)
-  }
+  (val) => eventBus.emit('setColNum', val)
 )
 
 watch(
   () => props.rowHeight,
-  (val) => {
-    eventBus.emit('setRowHeight', props.rowHeight)
-  }
+  () => eventBus.emit('setRowHeight', props.rowHeight)
 )
 
 watch(
   () => props.isDraggable,
-  (val) => {
-    eventBus.emit('setDraggable', props.isDraggable)
-  }
+  () => eventBus.emit('setDraggable', props.isDraggable)
 )
 
 watch(
   () => props.isResizable,
-  (val) => {
-    eventBus.emit('setResizable', props.isResizable)
-  }
+  () => eventBus.emit('setResizable', props.isResizable)
 )
 
 watch(
   () => props.responsive,
-  (val) => {
+  () => {
     if (!props.responsive) {
       emit('update:layout', originalLayout)
       eventBus.emit('setColNum', props.colNum)
@@ -254,16 +234,12 @@ watch(
 
 watch(
   () => props.maxRows,
-  (val) => {
-    eventBus.emit('setMaxRows', props.maxRows)
-  }
+  () => eventBus.emit('setMaxRows', props.maxRows)
 )
 
 watch(
   () => props.margin,
-  (val) => {
-    updateHeight()
-  }
+  () => updateHeight()
 )
 
 // Accessible refernces of functions for removing in beforeUnmount
@@ -369,23 +345,11 @@ const onWindowResize = () => {
 }
 const containerHeight = () => {
   if (!props.autoSize) return
-  // console.log("bottom: " + bottom(this.layout))
-  // console.log("rowHeight + margins: " + (this.rowHeight + this.margin[1]) + this.margin[1])
   const containerHeight =
-    bottom(props.layout as any) * (props.rowHeight + (props.margin as any)[1]) +
-    (props.margin as any)[1] +
-    'px'
+    bottom(props.layout as any) * (props.rowHeight + (props.margin as any)[1]) + (props.margin as any)[1] + 'px'
   return containerHeight
 }
-const dragEvent = (
-  eventName: string,
-  id: string,
-  x: number | undefined,
-  y: number,
-  h: any,
-  w: any
-) => {
-  //console.log(eventName + " id=" + id + ", x=" + x + ", y=" + y);
+const dragEvent = (eventName: string, id: string, x: number | undefined, y: number, h: any, w: any) => {
   let l = getLayoutItem(props.layout as any, id) as any
   //GetLayoutItem sometimes returns null object
   if (l === undefined || l === null) {
@@ -401,7 +365,6 @@ const dragEvent = (
     nextTick(function () {
       isDragging.value = true
     })
-    //this.$broadcast("updateWidth", this.width);
     eventBus.emit('updateWidth', width.value)
   } else {
     nextTick(function () {
@@ -410,24 +373,14 @@ const dragEvent = (
   }
 
   // Move the element to the dragged location.
-  emit(
-    'update:layout',
-    moveElement(props.layout as any, l, x, y, true, props.preventCollision)
-  )
+  emit('update:layout', moveElement(props.layout as any, l, x, y, true, props.preventCollision))
   compact(props.layout as any, props.verticalCompact)
   // needed because vue can't detect changes on array element properties
   eventBus.emit('compact')
   updateHeight()
   if (eventName === 'dragend') emit('layout-updated', props.layout)
 }
-const resizeEvent = (
-  eventName: string,
-  id: string,
-  x: any,
-  y: any,
-  h: number,
-  w: number
-) => {
+const resizeEvent = (eventName: string, id: string, x: any, y: any, h: number, w: number) => {
   let l = getLayoutItem(props.layout as any, id) as any
   //GetLayoutItem sometimes return null object
   if (l === undefined || l === null) {
@@ -436,10 +389,9 @@ const resizeEvent = (
 
   let hasCollisions
   if (props.preventCollision) {
-    const collisions = getAllCollisions(
-      props.layout as any,
-      { ...l, w, h } as any
-    ).filter((layoutItem) => layoutItem.i !== l.i)
+    const collisions = getAllCollisions(props.layout as any, { ...l, w, h } as any).filter(
+      (layoutItem) => layoutItem.i !== l.i
+    )
     hasCollisions = collisions.length > 0
 
     // If we're colliding, we need adjust the placeholder.
@@ -491,10 +443,7 @@ const resizeEvent = (
 
 // finds or generates new layouts for set breakpoints
 const responsiveGridLayout = () => {
-  let newBreakpoint = getBreakpointFromWidth(
-    props.breakpoints,
-    width.value as any
-  )
+  let newBreakpoint = getBreakpointFromWidth(props.breakpoints, width.value as any)
   let newCols = getColsFromBreakpoint(newBreakpoint, props.cols)
 
   // save actual layout in layouts
@@ -551,8 +500,7 @@ const findDifference = (layout: unknown[], originalLayout: any[]) => {
   //Combine the two arrays of unique entries#
   return uniqueResultOne.concat(uniqueResultTwo)
 }
-// },
-// }
+
 </script>
 
 <style>

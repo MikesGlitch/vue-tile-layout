@@ -5,19 +5,20 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
+    "build:lib": "rimraf dist && vue-cli-service build --target lib ./src/components/index.ts --report",
     "test:unit": "vue-cli-service test:unit",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
-    "core-js": "^3.6.5",
-    "vue": "^3.0.0",    
     "@interactjs/actions": "^1.10.2",
     "@interactjs/auto-start": "^1.10.2",
     "@interactjs/dev-tools": "^1.10.2",
     "@interactjs/interactjs": "^1.10.2",
     "@interactjs/modifiers": "^1.10.2",
+    "core-js": "^3.6.5",
     "element-resize-detector": "^1.2.1",
-    "mitt": "^2.1.0"
+    "mitt": "^2.1.0",
+    "vue": "^3.0.0"
   },
   "devDependencies": {
     "@types/jest": "^24.0.19",
@@ -36,6 +37,7 @@
     "eslint-plugin-prettier": "^3.4.1",
     "eslint-plugin-vue": "^7.0.0",
     "prettier": "2.5.1",
+    "rimraf": "^3.0.2",
     "sass": "^1.44.0",
     "sass-loader": "^8.0.2",
     "typescript": "~4.1.5",
