@@ -14,9 +14,7 @@ export function offsetXYFromParentOf(evt: {
 }) {
   const offsetParent = evt.target.offsetParent || document.body
   const offsetParentRect =
-    evt.offsetParent === document.body
-      ? { left: 0, top: 0 }
-      : offsetParent.getBoundingClientRect()
+    evt.offsetParent === document.body ? { left: 0, top: 0 } : offsetParent.getBoundingClientRect()
 
   const x = evt.clientX + offsetParent.scrollLeft - offsetParentRect.left
   const y = evt.clientY + offsetParent.scrollTop - offsetParentRect.top
@@ -29,12 +27,7 @@ export function offsetXYFromParentOf(evt: {
 
 // Create an data object exposed by <DraggableCore>'s events
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-export function createCoreData(
-  lastX: number,
-  lastY: number,
-  x: number,
-  y: number
-) {
+export function createCoreData(lastX: number, lastY: number, x: number, y: number) {
   // State changes are often (but not always!) async. We want the latest value.
   const isStart = !isNum(lastX)
 

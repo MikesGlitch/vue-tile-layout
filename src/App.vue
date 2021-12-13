@@ -2,9 +2,10 @@
   <h1>DON'T FORGET TO TAKE FROM THE VUE3 BRANCH OF VUE-GRID-LAYOUT</h1>
   <h5>TODOS:</h5>
   <ul>
-    <li>use typescript in components</li>
-    <li>Turn off allowJs in compiler (tsconfig)</li>
-    <li>Start adding VueUse and removing some of the code in the utils</li>
+    <li>Remove any features you dont want and make some examples</li>
+    <li>Rename the component and do a full separation from vue-grid-layout</li>
+    <li>Potentially start adding VueUse and removing some of the code in the utils</li>
+    <li>Move this page to website documentation? It's basically what I want but I need the package separate</li>
   </ul>
 
   <div>
@@ -58,6 +59,7 @@
       <label for="useStyleCursor">useStyleCursor</label>
       <input id="useStyleCursor" v-model="layoutSettings.useStyleCursor" type="checkbox" />
     </div>
+    <button @click="reloadWithDelay">Reload with delay</button>
   </div>
 
   <grid-layout
@@ -107,6 +109,14 @@ const layoutSettings = ref({
   preventCollision: false,
   useStyleCursor: true,
 })
+
+const reloadWithDelay = () => {
+  const oldLayout = [...layout.value]
+  layout.value = []
+  setTimeout(() => {
+    layout.value = oldLayout
+  }, 3000)
+}
 
 const layout = ref([
   { x: 0, y: 0, w: 2, h: 2, i: '0' },

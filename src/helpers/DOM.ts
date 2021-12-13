@@ -15,9 +15,7 @@ export function getDocumentDir() {
     return currentDir
   }
   const direction =
-    typeof document.dir !== 'undefined'
-      ? document.dir
-      : document.getElementsByTagName('html')[0].getAttribute('dir')
+    typeof document.dir !== 'undefined' ? document.dir : document.getElementsByTagName('html')[0].getAttribute('dir')
   return direction
 }
 

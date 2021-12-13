@@ -125,11 +125,7 @@ export function compact(layout: Layout, verticalCompact: boolean): Layout {
 /**
  * Compact an item in the layout.
  */
-export function compactItem(
-  compareWith: Layout,
-  l: LayoutItem,
-  verticalCompact: boolean
-): LayoutItem {
+export function compactItem(compareWith: Layout, l: LayoutItem, verticalCompact: boolean): LayoutItem {
   if (verticalCompact) {
     // Move the element up as far as it can go without colliding.
     while (l.y > 0 && !getFirstCollision(compareWith, l)) {
@@ -151,10 +147,7 @@ export function compactItem(
  * @param  {Array} layout Layout array.
  * @param  {Number} bounds Number of columns.
  */
-export function correctBounds(
-  layout: Layout,
-  bounds: { cols: number }
-): Layout {
+export function correctBounds(layout: Layout, bounds: { cols: number }): Layout {
   const collidesWith = getStatics(layout)
   for (let i = 0, len = layout.length; i < len; i++) {
     const l = layout[i]
@@ -184,10 +177,7 @@ export function correctBounds(
  * @param  {String} id     ID
  * @return {LayoutItem}    Item at ID.
  */
-export function getLayoutItem(
-  layout: Layout,
-  id: string
-): LayoutItem | undefined {
+export function getLayoutItem(layout: Layout, id: string): LayoutItem | undefined {
   for (let i = 0, len = layout.length; i < len; i++) {
     if (layout[i].i === id) return layout[i]
   }
@@ -201,19 +191,13 @@ export function getLayoutItem(
  * @param  {Object} layoutItem Layout item.
  * @return {Object|undefined}  A colliding layout item, or undefined.
  */
-export function getFirstCollision(
-  layout: Layout,
-  layoutItem: LayoutItem
-): LayoutItem | undefined {
+export function getFirstCollision(layout: Layout, layoutItem: LayoutItem): LayoutItem | undefined {
   for (let i = 0, len = layout.length; i < len; i++) {
     if (collides(layout[i], layoutItem)) return layout[i]
   }
 }
 
-export function getAllCollisions(
-  layout: Layout,
-  layoutItem: LayoutItem
-): Array<LayoutItem> {
+export function getAllCollisions(layout: Layout, layoutItem: LayoutItem): Array<LayoutItem> {
   return layout.filter((l) => collides(l, layoutItem))
 }
 
@@ -327,27 +311,13 @@ export function moveElementAwayFromCollision(
     }
     fakeItem.y = Math.max(collidesWith.y - itemToMove.h, 0)
     if (!getFirstCollision(layout, fakeItem)) {
-      return moveElement(
-        layout,
-        itemToMove,
-        undefined,
-        fakeItem.y,
-        isUserAction,
-        preventCollision
-      )
+      return moveElement(layout, itemToMove, undefined, fakeItem.y, isUserAction, preventCollision)
     }
   }
 
   // Previously this was optimized to move below the collision directly, but this can cause problems
   // with cascading moves, as an item may actually leapflog a collision and cause a reversal in order.
-  return moveElement(
-    layout,
-    itemToMove,
-    undefined,
-    itemToMove.y + 1,
-    isUserAction,
-    preventCollision
-  )
+  return moveElement(layout, itemToMove, undefined, itemToMove.y + 1, isUserAction, preventCollision)
 }
 
 /**
@@ -360,12 +330,7 @@ export function perc(num: number): string {
   return num * 100 + '%'
 }
 
-export function setTransform(
-  top: string,
-  left: string,
-  width: string,
-  height: string
-): Object {
+export function setTransform(top: string, left: string, width: string, height: string): Object {
   // Replace unitless items with px
   const translate = 'translate3d(' + left + 'px,' + top + 'px, 0)'
   return {
@@ -388,12 +353,7 @@ export function setTransform(
  * @param height
  * @returns {{transform: string, WebkitTransform: string, MozTransform: string, msTransform: string, OTransform: string, width: string, height: string, position: string}}
  */
-export function setTransformRtl(
-  top: string,
-  right: number,
-  width: string,
-  height: string
-): Object {
+export function setTransformRtl(top: string, right: number, width: string, height: string): Object {
   // Replace unitless items with px
   const translate = 'translate3d(' + right * -1 + 'px,' + top + 'px, 0)'
   return {
@@ -408,12 +368,7 @@ export function setTransformRtl(
   }
 }
 
-export function setTopLeft(
-  top: string,
-  left: string,
-  width: string,
-  height: string
-): Object {
+export function setTopLeft(top: string, left: string, width: string, height: string): Object {
   return {
     top: top + 'px',
     left: left + 'px',
@@ -431,12 +386,7 @@ export function setTopLeft(
  * @param height
  * @returns {{top: string, right: string, width: string, height: string, position: string}}
  */
-export function setTopRight(
-  top: string,
-  right: string,
-  width: string,
-  height: string
-): Object {
+export function setTopRight(top: string, right: string, width: string, height: string): Object {
   return {
     top: top + 'px',
     right: right + 'px',
@@ -454,17 +404,13 @@ export function setTopRight(
  */
 export function sortLayoutItemsByRowCol(layout: Layout): Layout {
   return [].concat(layout as unknown as any).sort(function (a, b) {
-    if (
-      (a as unknown as any).y === (b as unknown as any).y &&
-      (a as unknown as any).x === (b as unknown as any).x
-    ) {
+    if ((a as unknown as any).y === (b as unknown as any).y && (a as unknown as any).x === (b as unknown as any).x) {
       return 0
     }
 
     if (
       (a as unknown as any).y > (b as unknown as any).y ||
-      ((a as unknown as any).y === (b as unknown as any).y &&
-        (a as unknown as any).x > (b as unknown as any).x)
+      ((a as unknown as any).y === (b as unknown as any).y && (a as unknown as any).x > (b as unknown as any).x)
     ) {
       return 1
     }
@@ -472,66 +418,6 @@ export function sortLayoutItemsByRowCol(layout: Layout): Layout {
     return -1
   })
 }
-
-/**
- * Generate a layout using the initialLayout and children as a template.
- * Missing entries will be added, extraneous ones will be truncated.
- *
- * @param  {Array}  initialLayout Layout passed in through props.
- * @param  {String} breakpoint    Current responsive breakpoint.
- * @param  {Boolean} verticalCompact Whether or not to compact the layout vertically.
- * @return {Array}                Working layout.
- */
-/*
-export function synchronizeLayoutWithChildren(initialLayout: Layout, children: Array<React.Element>|React.Element,
-                                              cols: number, verticalCompact: boolean): Layout {
-  // ensure 'children' is always an array
-  if (!Array.isArray(children)) {
-    children = [children];
-  }
-  initialLayout = initialLayout || [];
-
-  // Generate one layout item per child.
-  let layout: Layout = [];
-  for (let i = 0, len = children.length; i < len; i++) {
-    let newItem;
-    const child = children[i];
-
-    // Don't overwrite if it already exists.
-    const exists = getLayoutItem(initialLayout, child.key || "1" /!* FIXME satisfies Flow *!/);
-    if (exists) {
-      newItem = exists;
-    } else {
-      const g = child.props._grid;
-
-      // Hey, this item has a _grid property, use it.
-      if (g) {
-        if (!isProduction) {
-          validateLayout([g], 'ReactGridLayout.children');
-        }
-        // Validated; add it to the layout. Bottom 'y' possible is the bottom of the layout.
-        // This allows you to do nice stuff like specify {y: Infinity}
-        if (verticalCompact) {
-          newItem = cloneLayoutItem({...g, y: Math.min(bottom(layout), g.y), i: child.key});
-        } else {
-          newItem = cloneLayoutItem({...g, y: g.y, i: child.key});
-        }
-      }
-      // Nothing provided: ensure this is added to the bottom
-      else {
-        newItem = cloneLayoutItem({w: 1, h: 1, x: 0, y: bottom(layout), i: child.key || "1"});
-      }
-    }
-    layout[i] = newItem;
-  }
-
-  // Correct the layout.
-  layout = correctBounds(layout, {cols: cols});
-  layout = compact(layout, verticalCompact);
-
-  return layout;
-}
-*/
 
 /**
  * Validate a layout. Throws errors.
@@ -544,135 +430,31 @@ export function validateLayout(layout: Layout, contextName?: string): void {
   contextName = contextName || 'Layout'
   const subProps = ['x', 'y', 'w', 'h']
   const keyArr = []
-  if (!Array.isArray(layout))
-    throw new Error(contextName + ' must be an array!')
+  if (!Array.isArray(layout)) throw new Error(contextName + ' must be an array!')
   for (let i = 0, len = layout.length; i < len; i++) {
     const item = layout[i]
     for (let j = 0; j < subProps.length; j++) {
       if (typeof (item as unknown as any)[subProps[j]] !== 'number') {
-        throw new Error(
-          'VueGridLayout: ' +
-            contextName +
-            '[' +
-            i +
-            '].' +
-            subProps[j] +
-            ' must be a number!'
-        )
+        throw new Error('VueGridLayout: ' + contextName + '[' + i + '].' + subProps[j] + ' must be a number!')
       }
     }
 
     if (item.i === undefined || item.i === null) {
-      throw new Error(
-        'VueGridLayout: ' + contextName + '[' + i + '].i cannot be null!'
-      )
+      throw new Error('VueGridLayout: ' + contextName + '[' + i + '].i cannot be null!')
     }
 
     if (typeof item.i !== 'number' && typeof item.i !== 'string') {
-      throw new Error(
-        'VueGridLayout: ' +
-          contextName +
-          '[' +
-          i +
-          '].i must be a string or number!'
-      )
+      throw new Error('VueGridLayout: ' + contextName + '[' + i + '].i must be a string or number!')
     }
 
     if (keyArr.indexOf(item.i) >= 0) {
-      throw new Error(
-        'VueGridLayout: ' + contextName + '[' + i + '].i must be unique!'
-      )
+      throw new Error('VueGridLayout: ' + contextName + '[' + i + '].i must be unique!')
     }
     keyArr.push(item.i)
 
     if (item.static !== undefined && typeof item.static !== 'boolean') {
-      throw new Error(
-        'VueGridLayout: ' +
-          contextName +
-          '[' +
-          i +
-          '].static must be a boolean!'
-      )
+      throw new Error('VueGridLayout: ' + contextName + '[' + i + '].static must be a boolean!')
     }
-  }
-}
-
-// Flow can't really figure this out, so we just use Object
-export function autoBindHandlers(el: Object, fns: Array<string>): void {
-  fns.forEach(
-    (key) =>
-      ((el as unknown as any)[key] = (el as unknown as any)[key].bind(el))
-  )
-}
-
-/**
- * Convert a JS object to CSS string. Similar to React's output of CSS.
- * @param obj
- * @returns {string}
- */
-export function createMarkup(obj: { [x: string]: any }) {
-  const keys = Object.keys(obj)
-  if (!keys.length) return ''
-  let i,
-    // eslint-disable-next-line prefer-const
-    len = keys.length
-  let result = ''
-
-  for (i = 0; i < len; i++) {
-    const key = keys[i]
-    const val = obj[key]
-    result += hyphenate(key) + ':' + addPx(key, val) + ';'
-  }
-
-  return result
-}
-
-/* The following list is defined in React's core */
-// eslint-disable-next-line no-var
-export var IS_UNITLESS = {
-  animationIterationCount: true,
-  boxFlex: true,
-  boxFlexGroup: true,
-  boxOrdinalGroup: true,
-  columnCount: true,
-  flex: true,
-  flexGrow: true,
-  flexPositive: true,
-  flexShrink: true,
-  flexNegative: true,
-  flexOrder: true,
-  gridRow: true,
-  gridColumn: true,
-  fontWeight: true,
-  lineClamp: true,
-  lineHeight: true,
-  opacity: true,
-  order: true,
-  orphans: true,
-  tabSize: true,
-  widows: true,
-  zIndex: true,
-  zoom: true,
-
-  // SVG-related properties
-  fillOpacity: true,
-  stopOpacity: true,
-  strokeDashoffset: true,
-  strokeOpacity: true,
-  strokeWidth: true,
-}
-
-/**
- * Will add px to the end of style values which are Numbers.
- * @param name
- * @param value
- * @returns {*}
- */
-export function addPx(name: string, value: string) {
-  if (typeof value === 'number' && !(IS_UNITLESS as unknown as any)[name]) {
-    return value + 'px'
-  } else {
-    return value
   }
 }
 
@@ -688,28 +470,4 @@ export var hyphenateRE = /([a-z\d])([A-Z])/g
 
 export function hyphenate(str: string) {
   return str.replace(hyphenateRE, '$1-$2').toLowerCase()
-}
-
-export function findItemInArray(
-  array: string | any[],
-  property: string | number,
-  value: any
-) {
-  for (let i = 0; i < array.length; i++)
-    if (array[i][property] == value) return true
-
-  return false
-}
-
-export function findAndRemove(
-  array: any[],
-  property: string | number,
-  value: any
-) {
-  array.forEach(function (result, index) {
-    if (result[property] === value) {
-      //Remove from array
-      array.splice(index, 1)
-    }
-  })
 }
