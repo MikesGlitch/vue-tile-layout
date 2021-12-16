@@ -36,5 +36,9 @@ jobs:
     - run: npm run build
     - run: cd src/.vuepress/dist
     - run: ls
+    - run: git init
+    - run: git add -A
+    - run: git commit -m "deploy"
+    - run: git push -f git@github.com:MikesGlitch/vue-griddy.git master:gh-pages
     
     
