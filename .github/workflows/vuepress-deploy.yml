@@ -21,8 +21,8 @@ jobs:
     - name: test
       run: |
         echo "$secrets.ACCESS_TOKEN"
-        echo "${secrets.ACCESS_TOKEN}"
-        echo "https://${secrets.ACCESS_TOKEN}@github"
+        echo "${{secrets.ACCESS_TOKEN}}"
+        echo "https://${{secrets.ACCESS_TOKEN}}@github"
     
     - name: Checkout
       uses: actions/checkout@main
