@@ -17,7 +17,11 @@ jobs:
         node-version: [16.x]
 
     steps:
-    
+        
+    - name: test
+      run: |
+        echo "https://${{secrets.ACCESS_TOKEN}}@github.com:MikesGlitch/vue-griddy.git"
+        
     - name: Checkout
       uses: actions/checkout@main
        
