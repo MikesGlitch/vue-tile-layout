@@ -20,9 +20,9 @@ jobs:
     
     - name: test
       run: |
-        echo "$ACCESS_TOKEN"
-        echo "${ACCESS_TOKEN}"
-        echo "https://$ACCESS_TOKEN@github"
+        echo "$secrets.ACCESS_TOKEN"
+        echo "${secrets.ACCESS_TOKEN}"
+        echo "https://${secrets.ACCESS_TOKEN}@github"
     
     - name: Checkout
       uses: actions/checkout@main
@@ -42,14 +42,6 @@ jobs:
         git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
         git add -A  
         git commit -m "deploy"
-        git push -f https://$secrets.ACCESS_TOKEN@github.com:MikesGlitch/vue-griddy.git master:gh-pages
+        git push -f https://${secrets}.ACCESS_TOKEN@github.com:MikesGlitch/vue-griddy.git master:gh-pages
       working-directory: ./docs/src/.vuepress/dist   
-   
-  #  - name: GitHub Push
-  #    uses: ad-m/github-push-action@v0.6.0
-  #    with:
-  #      github_token: ${{ secrets.GITHUB_TOKEN }}
-  #      branch: gh-pages
-  #      force: true
-  #      directory: ./docs/src/.vuepress/dist   
    
