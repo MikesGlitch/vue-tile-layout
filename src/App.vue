@@ -2,10 +2,13 @@
   <h1>DON'T FORGET TO TAKE FROM THE VUE3 BRANCH OF VUE-GRID-LAYOUT</h1>
   <h5>TODOS:</h5>
   <ul>
+    <li>Vuepress website with code integration into the library - will be used for examples</li>
+    <li>Copy from gridstack API and make this code better</li>
     <li>Remove any features you dont want and make some examples</li>
     <li>Rename the component and do a full separation from vue-grid-layout</li>
     <li>Potentially start adding VueUse and removing some of the code in the utils</li>
     <li>Move this page to website documentation? It's basically what I want but I need the package separate</li>
+    <li>Responsive mode doesn't work with over 12 cols. It's very annoying. Fix it.</li>
   </ul>
 
   <div>
