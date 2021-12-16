@@ -18,6 +18,15 @@ jobs:
 
     steps:
     
+    - name: test
+      run: |
+        echo $GITHUB_ACTOR
+        echo ${GITHUB_ACTOR}
+        echo "${GITHUB_ACTOR}"
+        echo "$ACCESS_TOKEN"
+        echo "${ACCESS_TOKEN}"
+        echo "https://$ACCESS_TOKEN@github"
+    
     - name: Checkout
       uses: actions/checkout@main
        
