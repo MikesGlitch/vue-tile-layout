@@ -37,5 +37,5 @@ jobs:
         git config user.email "${GITHUB_ACTOR}@users.noreply.github.com"
         git add -A  
         git commit -m "deploy"
-        git push origin gh-pages
+        git push -f git@github.com:MikesGlitch/vue-griddy.git main:gh-pages
       working-directory: ./docs/src/.vuepress/dist   
