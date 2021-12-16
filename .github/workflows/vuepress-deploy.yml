@@ -20,8 +20,8 @@ jobs:
         
     - name: test
       run: |
-        echo "https://${{secrets.ACCESS_TOKEN}}@github.com:MikesGlitch/vue-griddy.git"
-        ping https://${{secrets.ACCESS_TOKEN}}@github.com:MikesGlitch/vue-griddy.git
+        echo https://${{secrets.ACCESS_TOKEN}}@github.com:MikesGlitch/vue-griddy.git
+        echo https://${secrets.ACCESS_TOKEN}@github.com:MikesGlitch/vue-griddy.git
         
     - name: Checkout
       uses: actions/checkout@main
