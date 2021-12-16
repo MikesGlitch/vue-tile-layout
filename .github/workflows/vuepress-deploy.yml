@@ -18,11 +18,6 @@ jobs:
 
     steps:
         
-    - name: test
-      run: |
-        echo https://${{secrets.ACCESS_TOKEN}}@github.com:MikesGlitch/vue-griddy.git
-        echo https://${secrets.ACCESS_TOKEN}@github.com:MikesGlitch/vue-griddy.git
-        
     - name: Checkout
       uses: actions/checkout@main
        
@@ -41,6 +36,6 @@ jobs:
         git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
         git add -A  
         git commit -m "deploy"
-        git push -f https://${{secrets.ACCESS_TOKEN}}@github.com:MikesGlitch/vue-griddy.git master:gh-pages
+        git push -f https://${{secrets.ACCESS_TOKEN}}@github.com/MikesGlitch/vue-griddy.git master:gh-pages
       working-directory: ./docs/src/.vuepress/dist   
    
