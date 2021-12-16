@@ -30,16 +30,18 @@ jobs:
     #  with:
     #    node-version: ${{ matrix.node-version }}
     #    cache: 'npm'
-
-    - run: cd docs
-    - run: ls
-    - run: npm ci
-    - run: npm run build
-    - run: cd src/.vuepress/dist
-    - run: ls
-    - run: git init
-    - run: git add -A
-    - run: git commit -m "deploy"
-    - run: git push -f git@github.com:MikesGlitch/vue-griddy.git master:gh-pages
-    
-    
+    - name: install
+      run: npm ci
+      working-directory: ./docs
+      
+    - name: build
+      run: npm run build
+      working-directory: ./docs
+      
+    - name: deploy
+      run: |
+        git init 
+        git add -A  
+        git commit -m "deploy"
+        git push -f git@github.com:MikesGlitch/vue-griddy.git master:gh-pages
+      working-directory: ./docs/src/.vuepress/dist   
