@@ -1,4 +1,6 @@
 <template>
+  Example 1
+  <Test />
   {{ layout }}
   <!-- {{ GridItem }} -->
   <!-- <GridLayout v-model:layout="layout" :is-draggable="true" :is-resizable="true">
@@ -13,9 +15,9 @@
 
 <script lang="ts" setup>
 import { ref } from 'vue'
-// import { GridItem } from 'vue-griddy'
+import { Test } from 'vue-griddy'
 
-const test = 'Example 1 hello'
+// const test = 'Example 1 hello'
 const layout = ref([
   { x: 0, y: 0, w: 2, h: 2, i: '0' },
   { x: 2, y: 0, w: 2, h: 4, i: '1' },

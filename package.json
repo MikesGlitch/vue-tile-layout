@@ -4,6 +4,11 @@
   "private": false,
   "main": "dist/vue-griddy.common.js",
   "unpkg": "dist/vue-griddy.umd.min.js",
+  "types": "src/components/index.d.ts",
+  "files": [
+    "src",
+    "dist"
+  ],
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
