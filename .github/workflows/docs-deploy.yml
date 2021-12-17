@@ -1,0 +1,40 @@
+name: Docs Build and Deploy
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'docs-site/**'
+      - '.github/**'
+
+jobs:
+  build-and-deploy:
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [16.x]
+
+    steps:
+    
+    - name: Checkout
+      uses: actions/checkout@main
+       
+    - name: install
+      run: npm ci
+      working-directory: ./docs-site
+      
+    - name: build
+      run: npm run build
+      working-directory: ./docs-site
+      
+    - name: deploy
+      run: |
+        git init 
+        git config user.name "${GITHUB_ACTOR}"
+        git config user.email "${GITHUB_ACTOR}@users.noreply.github.com"
+        git add -A  
+        git commit -m "deploy"
+        git push -f git@github.com:MikesGlitch/vue-griddy.git main:gh-pages
+      working-directory: ./docs-site/docs/.vitepress/dist   

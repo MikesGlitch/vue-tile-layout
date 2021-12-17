@@ -1,11 +1,13 @@
 {
   "name": "vue-griddy",
   "version": "0.1.0",
-  "private": true,
+  "private": false,
+  "main": "dist/vue-griddy.common.js",
+  "unpkg": "dist/vue-griddy.umd.min.js",
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "build:lib": "rimraf dist && vue-cli-service build --target lib ./src/components/index.ts --report",
+    "build:lib": "rimraf dist && vue-cli-service build --target lib ./src/components/index.ts",
     "test:unit": "vue-cli-service test:unit",
     "lint": "vue-cli-service lint"
   },
