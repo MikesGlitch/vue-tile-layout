@@ -1,4 +1,4 @@
-const path = require('path')
+import path from 'path'
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 
@@ -6,14 +6,14 @@ import vue from '@vitejs/plugin-vue'
 export default defineConfig({
   resolve: {
     alias: {
-      "@": path.resolve(__dirname, './src')
-    }
+      '@': path.resolve(__dirname, './src'),
+    },
   },
   build: {
     lib: {
       entry: path.resolve(__dirname, 'src/components/index.ts'),
       name: 'VueGriddy',
-      fileName: (format) => `vue-griddy.${format}.js`
+      fileName: (format) => `vue-griddy.${format}.js`,
     },
     rollupOptions: {
       // make sure to externalize deps that shouldn't be bundled
@@ -23,10 +23,10 @@ export default defineConfig({
         // Provide global variables to use in the UMD build
         // for externalized deps
         globals: {
-          vue: 'Vue'
-        }
-      }
-    }
+          vue: 'Vue',
+        },
+      },
+    },
   },
-  plugins: [vue()]
+  plugins: [vue()],
 })
