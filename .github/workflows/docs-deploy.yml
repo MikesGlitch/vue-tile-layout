@@ -25,7 +25,7 @@ jobs:
       run: npm ci
 
     - name: build lib
-      run: npm run build:lib
+      run: npm run build
 
     - name: install docs dependencies
       run: npm ci
