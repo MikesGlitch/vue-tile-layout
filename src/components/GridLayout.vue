@@ -28,8 +28,7 @@ import {
   provide,
 } from 'vue'
 
-// this isn't working - elemet resize detector
-import elementResizeDetectorMaker from 'element-resize-detector'
+import { useResizeObserver } from '@vueuse/core'
 
 import {
   bottom,
@@ -47,7 +46,6 @@ import {
 } from '@/helpers/responsiveUtils'
 
 import GridItem from './GridItem.vue'
-import { addWindowEventListener, removeWindowEventListener } from '@/helpers/DOM'
 
 const props = defineProps({
   // If true, the container height swells and contracts to fit contents
@@ -146,7 +144,6 @@ const placeholder = reactive({
 let layouts: any = {} // array to store all layouts from different breakpoints
 let lastBreakpoint: any = null // store last active breakpoint
 let originalLayout: any = null // store original Layout
-let erd: any = null
 const item = ref(null)
 
 const emit = defineEmits<{
@@ -260,10 +257,6 @@ onBeforeUnmount(() => {
   //Remove listeners
   eventBus.off('resizeEvent', resizeEventHandler)
   eventBus.off('dragEvent', dragEventHandler)
-  removeWindowEventListener('resize', onWindowResize)
-  if (erd) {
-    erd.uninstall(item.value)
-  }
 })
 
 onBeforeMount(() => {
@@ -282,21 +275,14 @@ onMounted(() => {
 
       initResponsiveFeatures()
 
-      //self.width = self.$el.offsetWidth;
-      addWindowEventListener('resize', onWindowResize)
-
       compact(props.layout as any, props.verticalCompact)
 
       emit('layout-updated', props.layout)
 
       updateHeight()
       nextTick(function () {
-        erd = elementResizeDetectorMaker({
-          strategy: 'scroll', //<- For ultra performance.
-          // See https://github.com/wnr/element-resize-detector/issues/110 about callOnAdd.
-          callOnAdd: false,
-        })
-        erd.listenTo(item.value, function () {
+        useResizeObserver(item, () => {
+          console.log('useResizeObserver triggered')
           onWindowResize()
         })
       })

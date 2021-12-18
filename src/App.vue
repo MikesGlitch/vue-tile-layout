@@ -9,11 +9,16 @@
     <li>Potentially start adding VueUse and removing some of the code in the utils</li>
     <li>Move this page to website documentation? It's basically what I want but I need the package separate</li>
     <li>Responsive mode doesn't work with over 12 cols. It's very annoying. Fix it.</li>
+    <li>Good idea for an example - slider puzzle.</li>
   </ul>
 
   <div>
     <h1>Settings</h1>
     <h5>Layout</h5>
+    <div>
+      <label for="containerWidth">Container width</label>
+      <input id="containerWidth" v-model="containerWidth" type="number" />
+    </div>
     <div>
       <label for="autoSize">AutoSize</label>
       <input id="autoSize" v-model="layoutSettings.autoSize" type="checkbox" />
@@ -65,29 +70,31 @@
     <button @click="reloadWithDelay">Reload with delay</button>
   </div>
 
-  <grid-layout
-    v-model:layout="layout"
-    :auto-size="layoutSettings.autoSize"
-    :col-num="layoutSettings.colNum"
-    :row-height="layoutSettings.rowHeight"
-    :max-rows="layoutSettings.maxRows"
-    :is-draggable="layoutSettings.isDraggable"
-    :is-resizable="layoutSettings.isResizable"
-    :is-mirrored="layoutSettings.isMirrored"
-    :use-css-transforms="layoutSettings.useCssTransforms"
-    :vertical-compact="layoutSettings.verticalCompact"
-    :responsive="layoutSettings.responsive"
-    :prevent-collision="layoutSettings.preventCollision"
-    :use-style-cursor="layoutSettings.useStyleCursor"
-  >
-    <grid-item v-for="item in layout" :key="item.i" :x="item.x" :y="item.y" :w="item.w" :h="item.h" :i="item.i">
-      <div style="width: 100%; height: 100%; text-align: center; border: 1px solid black">
-        <span>{{ item.i }}</span>
-        <p>Maybe put layout item settings here and allow configuring them in the demo</p>
-      </div>
-    </grid-item>
-  </grid-layout>
-
+  <!-- <div :style="{ width: containerWidth + 'px' }"> -->
+  <div>
+    <grid-layout
+      v-model:layout="layout"
+      :auto-size="layoutSettings.autoSize"
+      :col-num="layoutSettings.colNum"
+      :row-height="layoutSettings.rowHeight"
+      :max-rows="layoutSettings.maxRows"
+      :is-draggable="layoutSettings.isDraggable"
+      :is-resizable="layoutSettings.isResizable"
+      :is-mirrored="layoutSettings.isMirrored"
+      :use-css-transforms="layoutSettings.useCssTransforms"
+      :vertical-compact="layoutSettings.verticalCompact"
+      :responsive="layoutSettings.responsive"
+      :prevent-collision="layoutSettings.preventCollision"
+      :use-style-cursor="layoutSettings.useStyleCursor"
+    >
+      <grid-item v-for="item in layout" :key="item.i" :x="item.x" :y="item.y" :w="item.w" :h="item.h" :i="item.i">
+        <div style="width: 100%; height: 100%; text-align: center; border: 1px solid black">
+          <span>{{ item.i }}</span>
+          <p>Maybe put layout item settings here and allow configuring them in the demo</p>
+        </div>
+      </grid-item>
+    </grid-layout>
+  </div>
   <pre>
     {{ layout }}
   </pre>
@@ -97,6 +104,8 @@
 import { ref } from 'vue'
 import GridItem from './components/GridItem.vue'
 import GridLayout from './components/GridLayout.vue'
+
+const containerWidth = ref(1000)
 
 const layoutSettings = ref({
   autoSize: true,
