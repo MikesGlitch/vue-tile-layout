@@ -37,4 +37,4 @@ jobs:
         git add -A  
         git commit -m "deploy"
         git push -f git@github.com:MikesGlitch/vue-griddy.git main:gh-pages
-      working-directory: ./docs-site/docs/.vitepress/dist   
+      working-directory: ./docs-site/docs/.vuepress/dist   

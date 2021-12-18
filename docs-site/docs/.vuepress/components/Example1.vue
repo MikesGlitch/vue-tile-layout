@@ -1,23 +1,15 @@
 <template>
-  Example 1
   <Test />
   {{ layout }}
-  <!-- {{ GridItem }} -->
-  <!-- <GridLayout v-model:layout="layout" :is-draggable="true" :is-resizable="true">
-    <GridItem v-for="item in layout" :key="item.i" :x="item.x" :y="item.y" :w="item.w" :h="item.h" :i="item.i">
-      <div style="width: 100%; height: 100%; text-align: center; border: 1px solid black">
-        <span>{{ item.i }}</span>
-        <p>Maybe put layout item settings here and allow configuring them in the demo</p>
-      </div>
-    </GridItem>
-</GridLayout> -->
 </template>
 
 <script lang="ts" setup>
 import { ref } from 'vue'
-import { Test } from 'vue-griddy'
+// import { Test } from 'vue-griddy'
 
-// const test = 'Example 1 hello'
+// import { Test } from 'vue-griddy'
+// import Test from 'components/Test.vue'
+
 const layout = ref([
   { x: 0, y: 0, w: 2, h: 2, i: '0' },
   { x: 2, y: 0, w: 2, h: 4, i: '1' },

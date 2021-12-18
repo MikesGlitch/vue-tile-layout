@@ -1,17 +1,17 @@
----
-home: true
-heroImage: /logo.png
-heroAlt: Logo image
-heroText: Hero Title
-tagline: Hero subtitle
-actionText: Get Started
-actionLink: /guide/
-features:
-  - title: Simplicity First
-    details: Minimal setup with markdown-centered project structure helps you focus on writing.
-  - title: Vue-Powered
-    details: Enjoy the dev experience of Vue + webpack, use Vue components in markdown, and develop custom themes with Vue.
-  - title: Performant
-    details: VitePress generates pre-rendered static HTML for each page, and runs as an SPA once a page is loaded.
-footer: MIT Licensed | Copyright © 2019-present Evan You
----
+# Hello
+
+<ClientOnly>
+  <Example1 />
+</ClientOnly>
+<!-- <GridLayout v-model:layout="layout" :is-draggable="true" :is-resizable="true">
+    <GridItem v-for="item in layout" :key="item.i" :x="item.x" :y="item.y" :w="item.w" :h="item.h" :i="item.i">
+      <div style="width: 100%; height: 100%; text-align: center; border: 1px solid black">
+        <span>{{ item.i }}</span>
+        <p>Maybe put layout item settings here and allow configuring them in the demo</p>
+      </div>
+    </GridItem>
+</GridLayout> -->
+
+<script setup lang="ts">  
+// import Example1 from '.vuepress/components/Example1.vue'
+</script>

@@ -1,3 +1,3 @@
 <template>
-  <p>This is a test</p>
+  <p>This is a test 3</p>
 </template>
