@@ -2,7 +2,7 @@
   "name": "vue-griddy",
   "version": "0.1.0",
   "private": false,
-  "main": "dist/vue-griddy.umd.js",
+  "main": "dist/vue-griddy.common.js",
   "unpkg": "dist/vue-griddy.umd.min.js",
   "types": "src/components/index.d.ts",
   "files": [
