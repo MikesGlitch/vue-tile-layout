@@ -27,8 +27,9 @@ import {
   reactive,
   provide,
 } from 'vue'
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const elementResizeDetectorMaker = require('element-resize-detector')
+
+// this isn't working - elemet resize detector
+import elementResizeDetectorMaker from 'element-resize-detector'
 
 import {
   bottom,
