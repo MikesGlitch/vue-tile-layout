@@ -5,8 +5,7 @@ import Test from './Test.vue'
 
 // export { default as GridItem } from './GridItem.vue'
 // export { default as GridLayout } from './GridLayout.vue'
-export { default as Test } from './Test.vue'
-export { GridItem, GridLayout }
+export { GridItem, GridLayout, Test }
 
 export const install = (app: App): void => {
   app.component('GridLayout', GridLayout)

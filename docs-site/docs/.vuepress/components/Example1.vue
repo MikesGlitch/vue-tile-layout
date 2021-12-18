@@ -17,7 +17,7 @@
 
 <script lang="ts" setup>
 import { ref } from 'vue'
-import { GridLayout, GridItem, Test } from 'vite-project'
+import { GridLayout, GridItem, Test } from 'vue-griddy'
 
 // import { Test } from 'vue-griddy'
 // import Test from 'components/Test.vue'
