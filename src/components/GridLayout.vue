@@ -487,7 +487,6 @@ const findDifference = (layout: unknown[], originalLayout: any[]) => {
   //Combine the two arrays of unique entries#
   return uniqueResultOne.concat(uniqueResultTwo)
 }
-
 </script>
 
 <style>
