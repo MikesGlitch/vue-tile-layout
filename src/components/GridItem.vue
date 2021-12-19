@@ -20,11 +20,11 @@ import '@interactjs/dev-tools'
 import interact from '@interactjs/interact'
 
 const emit = defineEmits<{
-  (e: 'container-resized', i: any, h: any, w: any, height: any, width: any): void
-  (e: 'resize', i: any, h: any, w: any, height: any, width: any): void
-  (e: 'resized', i: any, h: any, w: any, height: any, width: any): void
-  (e: 'move', i: any, x: any, y: any): void
-  (e: 'moved', i: any, x: any, y: any): void
+  (e: 'container-resized', i: string, h: number, w: number, height: number, width: number): void
+  (e: 'resize', i: string, h: number, w: number, height: number, width: number): void
+  (e: 'resized', i: string, h: number, w: number, height: number, width: number): void
+  (e: 'move', i: string, x: number, y: number): void
+  (e: 'moved', i: string, x: number, y: number): void
 }>()
 
 const props = defineProps({
@@ -115,7 +115,7 @@ let containerWidth = ref(100)
 let rowHeight = ref(30)
 let margin = [10, 10]
 let maxRows = Infinity
-let draggable: any = ref(null)
+let draggable = ref<boolean | null>(null)
 let resizable: any = ref(null)
 let useCssTransforms = true
 let useStyleCursor = true
@@ -144,14 +144,9 @@ let innerW = props.w
 // eslint-disable-next-line vue/no-setup-props-destructure
 let innerH = props.h
 
-const renderRtl = computed(() => {
-  return layout.isMirrored ? !rtl : rtl
-})
-
+const renderRtl = computed(() => (layout.isMirrored ? !rtl : rtl))
 const resizableAndNotStatic = computed(() => resizable.value && !props.static)
-
 const isAndroid = computed(() => navigator.userAgent.toLowerCase().indexOf('android') !== -1)
-
 const draggableOrResizableAndNotStatic = computed(() => (draggable.value || resizable.value) && !props.static)
 
 const classObj = computed(() => {
@@ -273,7 +268,7 @@ const updateWidthHandler = (width: any) => {
   updateWidth(width)
 }
 
-const compactHandler = (layout: any) => {
+const compactHandler = () => {
   compact()
 }
 
@@ -337,6 +332,7 @@ onMounted(() => {
   } else {
     cols.value = layout.colNum
   }
+
   rowHeight.value = layout.rowHeight
   containerWidth.value = layout.width !== null ? layout.width : 100
   margin = layout.margin !== undefined ? layout.margin : [10, 10]
@@ -347,11 +343,13 @@ onMounted(() => {
   } else {
     draggable.value = props.isDraggable
   }
+
   if (props.isResizable === null) {
     resizable.value = layout.isResizable
   } else {
     resizable.value = props.isResizable
   }
+
   useCssTransforms = layout.useCssTransforms
   useStyleCursor = layout.useStyleCursor
   createStyle()
@@ -618,6 +616,7 @@ const calcXY = (top: number, left: number) => {
   let x = Math.round((left - margin[0]) / (colWidth + margin[0]))
   let y = Math.round((top - margin[1]) / (rowHeight.value + margin[1]))
   // Capping
+
   x = Math.max(Math.min(x, cols.value - innerW), 0)
   y = Math.max(Math.min(y, maxRows - innerH), 0)
   return { x, y }

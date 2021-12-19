@@ -10,6 +10,13 @@
     <li>Move this page to website documentation? It's basically what I want but I need the package separate</li>
     <li>Responsive mode doesn't work with over 12 cols. It's very annoying. Fix it.</li>
     <li>Good idea for an example - slider puzzle.</li>
+    <li>Good idea for an example - Dashboard widgets.</li>
+    <li>Rename the library - VueTile? VueGriddy? Vue-DraggableResizableLayout</li>
+    <li>Bit of inspiration https://github.com/react-grid-layout/react-grid-layout</li>
+    <li>
+      Can I refactor mitt out? https://v3.vuejs.org/guide/migration/events-api.html#event-bus If not probably just use
+      vueuse
+    </li>
     <li>
       Find a way to make vite inject the CSS into the bundle in lib mode -
       <a href="https://github.com/vitejs/vite/issues/4345">https://github.com/vitejs/vite/issues/4345</a>

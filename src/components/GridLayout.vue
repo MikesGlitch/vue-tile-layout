@@ -63,7 +63,7 @@ const props = defineProps({
   },
   maxRows: {
     type: Number,
-    default: Infinity,
+    default: Infinity, // MaxRows only applies to items when dragging or resizing, if you drag to position 0,0 when the column already has the max rows, it will allow it and the col will have one over the max rows
   },
   margin: {
     type: Array,
@@ -160,7 +160,6 @@ watch(
   () => width.value,
   (newval, oldval) => {
     nextTick(function () {
-      //this.$broadcast("updateWidth", this.width);
       eventBus.emit('updateWidth', width.value)
       if (oldval === null) {
         /*
@@ -411,7 +410,7 @@ const resizeEvent = (eventName: string, id: string, x: any, y: any, h: number, w
     nextTick(function () {
       isDragging.value = true
     })
-    //this.$broadcast("updateWidth", this.width);
+
     eventBus.emit('updateWidth', width.value)
   } else {
     nextTick(function () {
