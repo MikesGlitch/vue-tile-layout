@@ -35,6 +35,7 @@ export default defineUserConfig<DefaultThemeOptions>({
           text: 'Examples',
           children: [
             '/guide/examples/example1.md',
+            '/guide/examples/sliding-puzzle.md',
           ],
         },
       ],

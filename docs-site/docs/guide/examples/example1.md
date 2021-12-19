@@ -1,5 +1,6 @@
 # Example 1 - Basic
-
+Example 1 would be here
+<!-- 
 <ClientOnly>
-  <Example1 />
-</ClientOnly>
+  <SlidingPuzzle />
+</ClientOnly> -->
