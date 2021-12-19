@@ -1,3 +1,1 @@
-declare module 'vue-griddy'
-
-// Figure this out
+declare module 'vue-griddy' // Figure this out

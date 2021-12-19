@@ -1,26 +1,19 @@
 <template>
-<p>-----------------</p>
-  <Test />
-<p>-----------------</p>
+  <grid-layout v-model:layout="layout" :is-draggable="true" :is-resizable="true">
+    <grid-item v-for="item in layout" :key="item.i" :x="item.x" :y="item.y" :w="item.w" :h="item.h" :i="item.i">
+      <div style="width: 100%; height: 100%; text-align: center; border: 1px solid black">
+        <span>{{ item.i }}</span>
+        <p>Maybe put layout item settings here and allow configuring them in the demo</p>
+      </div>
+    </grid-item>
+  </grid-layout>
 
-  Below is from clientAppEnhance
-  <GridLayout v-model:layout="layout" :is-draggable="true" :is-resizable="true">
-      <GridItem v-for="item in layout" :key="item.i" :x="item.x" :y="item.y" :w="item.w" :h="item.h" :i="item.i">
-        <div style="width: 100%; height: 100%; text-align: center; border: 1px solid black">
-          <span>{{ item.i }}</span>
-          <p>Maybe put layout item settings here and allow configuring them in the demo</p>
-        </div>
-      </GridItem>
-  </GridLayout>
   {{ layout }}
 </template>
 
 <script lang="ts" setup>
 import { ref } from 'vue'
-import { GridLayout, GridItem, Test } from 'vue-griddy'
-
-// import { Test } from 'vue-griddy'
-// import Test from 'components/Test.vue'
+import { GridLayout, GridItem } from 'vue-griddy'
 
 const layout = ref([
   { x: 0, y: 0, w: 2, h: 2, i: '0' },
