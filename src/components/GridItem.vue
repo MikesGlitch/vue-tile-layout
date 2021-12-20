@@ -18,6 +18,7 @@ import '@interactjs/actions/resize'
 import '@interactjs/modifiers'
 import '@interactjs/dev-tools'
 import interact from '@interactjs/interact'
+import { Emitter } from 'mitt' // Try and remove mitt in favor of provide and watch
 
 const emit = defineEmits<{
   (e: 'container-resized', i: string, h: number, w: number, height: number, width: number): void
@@ -105,7 +106,7 @@ const props = defineProps({
   },
 })
 
-const eventBus: any = inject('eventBus')
+const eventBus = inject<Emitter>('eventBus')
 const layout: any = inject('layout')
 
 const item = ref(null)
@@ -272,7 +273,7 @@ const compactHandler = () => {
   compact()
 }
 
-const setDraggableHandler = (isDraggable: boolean) => {
+const setDraggableHandler = (isDraggable: any) => {
   if (props.isDraggable === null) {
     draggable.value = isDraggable
   }
@@ -301,26 +302,26 @@ const setColNum = (colNum: any) => {
   cols.value = parseInt(colNum)
 }
 
-eventBus.on('updateWidth', updateWidthHandler)
-eventBus.on('compact', compactHandler)
-eventBus.on('setDraggable', setDraggableHandler)
-eventBus.on('setResizable', setResizableHandler)
-eventBus.on('setRowHeight', setRowHeightHandler)
-eventBus.on('setMaxRows', setMaxRowsHandler)
-eventBus.on('directionchange', directionchangeHandler)
-eventBus.on('setColNum', setColNum)
+eventBus?.on('updateWidth', updateWidthHandler)
+eventBus?.on('compact', compactHandler)
+eventBus?.on('setDraggable', setDraggableHandler)
+eventBus?.on('setResizable', setResizableHandler)
+eventBus?.on('setRowHeight', setRowHeightHandler)
+eventBus?.on('setMaxRows', setMaxRowsHandler)
+eventBus?.on('directionchange', directionchangeHandler)
+eventBus?.on('setColNum', setColNum)
 
 rtl = getDocumentDir() === 'rtl'
 
 onBeforeUnmount(() => {
-  eventBus.off('updateWidth', updateWidthHandler)
-  eventBus.off('compact', compactHandler)
-  eventBus.off('setDraggable', setDraggableHandler)
-  eventBus.off('setResizable', setResizableHandler)
-  eventBus.off('setRowHeight', setRowHeightHandler)
-  eventBus.off('setMaxRows', setMaxRowsHandler)
-  eventBus.off('directionchange', directionchangeHandler)
-  eventBus.off('setColNum', setColNum)
+  eventBus?.off('updateWidth', updateWidthHandler)
+  eventBus?.off('compact', compactHandler)
+  eventBus?.off('setDraggable', setDraggableHandler)
+  eventBus?.off('setResizable', setResizableHandler)
+  eventBus?.off('setRowHeight', setRowHeightHandler)
+  eventBus?.off('setMaxRows', setMaxRowsHandler)
+  eventBus?.off('directionchange', directionchangeHandler)
+  eventBus?.off('setColNum', setColNum)
   if (interactObj) {
     interactObj.unset() // destroy interact intance
   }
@@ -482,12 +483,23 @@ const handleResize = (event: MouseEvent) => {
   lastW = x
   lastH = y
   if (innerW !== pos.w || innerH !== pos.h) {
+    console.log('resize')
     emit('resize', props.i, pos.h, pos.w, newSize.height, newSize.width)
   }
   if (event.type === 'resizeend' && (previousW !== innerW || previousH !== innerH)) {
+    console.log('resizeend')
     emit('resized', props.i, pos.h, pos.w, newSize.height, newSize.width)
   }
-  eventBus.emit('resizeEvent', {
+
+  console.log('grid item handleResize', {
+    eventType: event.type,
+    i: props.i,
+    x: innerX,
+    y: innerY,
+    h: pos.h,
+    w: pos.w,
+  })
+  eventBus?.emit('resizeEvent', {
     eventType: event.type,
     i: props.i,
     x: innerX,
@@ -566,7 +578,7 @@ const handleDrag = (event: MouseEvent) => {
   if (event.type === 'dragend' && (previousX !== innerX || previousY !== innerY)) {
     emit('moved', props.i, pos.x, pos.y)
   }
-  eventBus.emit('dragEvent', {
+  eventBus?.emit('dragEvent', {
     eventType: event.type,
     i: props.i,
     x: pos.x,
@@ -648,7 +660,7 @@ const calcWH = (height: number, width: number, autoSizeFlag = false) => {
   return { w, h }
 }
 
-const updateWidth = (width: any, colNum = null) => {
+const updateWidth = (width: number, colNum = null) => {
   containerWidth.value = width
   if (colNum !== undefined && colNum !== null) {
     cols.value = colNum

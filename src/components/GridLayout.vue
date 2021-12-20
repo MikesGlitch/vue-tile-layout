@@ -241,6 +241,7 @@ watch(
 
 // Accessible refernces of functions for removing in beforeUnmount
 const resizeEventHandler = ({ eventType, i, x, y, h, w }: any): void => {
+  console.log('resizeEventHandler', eventType, i, x, y, h, w)
   resizeEvent(eventType, i, x, y, h, w)
 }
 
@@ -327,6 +328,8 @@ const onWindowResize = () => {
   if (item.value !== null && item.value !== undefined) {
     width.value = (item.value as any).offsetWidth
   }
+
+  console.log('onWindowResize')
   eventBus.emit('resizeEvent', {})
 }
 const containerHeight = () => {
