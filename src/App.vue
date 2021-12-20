@@ -14,8 +14,9 @@
     <li>Rename the library - VueTile? VueGriddy? Vue-DraggableResizableLayout</li>
     <li>Bit of inspiration https://github.com/react-grid-layout/react-grid-layout</li>
     <li>
-      Can I refactor mitt out? https://v3.vuejs.org/guide/migration/events-api.html#event-bus If not probably just use
-      vueuse
+      I think whatever we do we'll need to use an event bus. There's now ay to use emit since we don't have access to
+      slot contents - not unless we change the way the component is structured. Probably just use vueuse
+      https://v3.vuejs.org/guide/migration/events-api.html#event-bus
     </li>
     <li>
       Find a way to make vite inject the CSS into the bundle in lib mode -

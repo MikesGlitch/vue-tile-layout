@@ -18,7 +18,7 @@ import '@interactjs/actions/resize'
 import '@interactjs/modifiers'
 import '@interactjs/dev-tools'
 import interact from '@interactjs/interact'
-import { Emitter } from 'mitt' // Try and remove mitt in favor of provide and watch
+import { Emitter } from 'mitt'
 
 const emit = defineEmits<{
   (e: 'container-resized', i: string, h: number, w: number, height: number, width: number): void
