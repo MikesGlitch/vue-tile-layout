@@ -9,7 +9,6 @@
 import { setTopLeft, setTopRight, setTransformRtl, setTransform } from '@/helpers/utils'
 import { getControlPosition, createCoreData } from '@/helpers/draggableUtils'
 import { getColsFromBreakpoint } from '@/helpers/responsiveUtils'
-import { getDocumentDir } from '@/helpers/DOM'
 import { defineProps, inject, ref, computed, watch, onBeforeUnmount, onMounted, defineEmits } from 'vue'
 
 import '@interactjs/auto-start'
@@ -129,7 +128,6 @@ let lastY = NaN
 let lastW = NaN
 let lastH = NaN
 const style: any = ref({})
-let rtl = false
 let dragEventSet = false
 let resizeEventSet = false
 let previousW: any = null
@@ -145,7 +143,6 @@ let innerW = props.w
 // eslint-disable-next-line vue/no-setup-props-destructure
 let innerH = props.h
 
-const renderRtl = computed(() => (layout.isMirrored ? !rtl : rtl))
 const resizableAndNotStatic = computed(() => resizable.value && !props.static)
 const isAndroid = computed(() => navigator.userAgent.toLowerCase().indexOf('android') !== -1)
 const draggableOrResizableAndNotStatic = computed(() => (draggable.value || resizable.value) && !props.static)
@@ -157,14 +154,14 @@ const classObj = computed(() => {
     resizing: isResizing,
     'vue-draggable-dragging': isDragging,
     cssTransforms: useCssTransforms,
-    'render-rtl': renderRtl.value,
+    'render-rtl': layout.isMirrored,
     'disable-userselect': isDragging.value,
     'no-touch': isAndroid.value && draggableOrResizableAndNotStatic.value,
   }
 })
 
 const resizableHandleClass = computed(() => {
-  if (renderRtl.value) {
+  if (layout.isMirrored) {
     return 'vue-resizable-handle vue-rtl-resizable-handle'
   } else {
     return 'vue-resizable-handle'
@@ -244,10 +241,13 @@ watch(
   }
 )
 
-watch(renderRtl, () => {
-  tryMakeResizable()
-  createStyle()
-})
+watch(
+  () => layout.isMirrored,
+  () => {
+    tryMakeResizable()
+    createStyle()
+  }
+)
 
 watch([() => props.minH, () => props.maxH, () => props.minW, () => props.maxW], () => {
   tryMakeResizable()
@@ -293,11 +293,6 @@ const setMaxRowsHandler = (maxRow: any) => {
   maxRows = maxRow
 }
 
-const directionchangeHandler = () => {
-  rtl = getDocumentDir() === 'rtl'
-  compact()
-}
-
 const setColNum = (colNum: any) => {
   cols.value = parseInt(colNum)
 }
@@ -308,10 +303,7 @@ eventBus?.on('setDraggable', setDraggableHandler)
 eventBus?.on('setResizable', setResizableHandler)
 eventBus?.on('setRowHeight', setRowHeightHandler)
 eventBus?.on('setMaxRows', setMaxRowsHandler)
-eventBus?.on('directionchange', directionchangeHandler)
 eventBus?.on('setColNum', setColNum)
-
-rtl = getDocumentDir() === 'rtl'
 
 onBeforeUnmount(() => {
   eventBus?.off('updateWidth', updateWidthHandler)
@@ -320,7 +312,6 @@ onBeforeUnmount(() => {
   eventBus?.off('setResizable', setResizableHandler)
   eventBus?.off('setRowHeight', setRowHeightHandler)
   eventBus?.off('setMaxRows', setMaxRowsHandler)
-  eventBus?.off('directionchange', directionchangeHandler)
   eventBus?.off('setColNum', setColNum)
   if (interactObj) {
     interactObj.unset() // destroy interact intance
@@ -370,7 +361,7 @@ const createStyle = () => {
   if (isDragging.value) {
     pos.top = dragging.top
     //                    Add rtl support
-    if (renderRtl.value) {
+    if (layout.isMirrored) {
       pos.right = dragging.left
     } else {
       pos.left = dragging.left
@@ -384,7 +375,7 @@ const createStyle = () => {
   // CSS Transforms support (default)
   if (useCssTransforms) {
     //                    Add rtl support
-    if (renderRtl.value) {
+    if (layout.isMirrored) {
       styleValue = setTransformRtl(pos.top as any, pos.right as any, pos.width as any, pos.height as any)
     } else {
       styleValue = setTransform(pos.top as any, pos.left as any, pos.width as any, pos.height as any)
@@ -392,7 +383,7 @@ const createStyle = () => {
   } else {
     // top,left (slow)
     //                    Add rtl support
-    if (renderRtl.value) {
+    if (layout.isMirrored) {
       styleValue = setTopRight(pos.top as any, pos.right as any, pos.width as any, pos.height as any)
     } else {
       styleValue = setTopLeft(pos.top as any, pos.left as any, pos.width as any, pos.height as any)
@@ -439,7 +430,7 @@ const handleResize = (event: MouseEvent) => {
     }
     case 'resizemove': {
       const coreEvent = createCoreData(lastW, lastH, x, y)
-      if (renderRtl.value) {
+      if (layout.isMirrored) {
         newSize.width = resizing.width - coreEvent.deltaX
       } else {
         newSize.width = resizing.width + coreEvent.deltaX
@@ -483,22 +474,22 @@ const handleResize = (event: MouseEvent) => {
   lastW = x
   lastH = y
   if (innerW !== pos.w || innerH !== pos.h) {
-    console.log('resize')
+    // console.log('resize')
     emit('resize', props.i, pos.h, pos.w, newSize.height, newSize.width)
   }
   if (event.type === 'resizeend' && (previousW !== innerW || previousH !== innerH)) {
-    console.log('resizeend')
+    // console.log('resizeend')
     emit('resized', props.i, pos.h, pos.w, newSize.height, newSize.width)
   }
 
-  console.log('grid item handleResize', {
-    eventType: event.type,
-    i: props.i,
-    x: innerX,
-    y: innerY,
-    h: pos.h,
-    w: pos.w,
-  })
+  // console.log('grid item handleResize', {
+  //   eventType: event.type,
+  //   i: props.i,
+  //   x: innerX,
+  //   y: innerY,
+  //   h: pos.h,
+  //   w: pos.w,
+  // })
   eventBus?.emit('resizeEvent', {
     eventType: event.type,
     i: props.i,
@@ -524,7 +515,7 @@ const handleDrag = (event: MouseEvent) => {
       previousY = innerY
       let parentRect = ((event.target as HTMLElement).offsetParent as any).getBoundingClientRect()
       let clientRect = (event.target as HTMLElement).getBoundingClientRect()
-      if (renderRtl.value) {
+      if (layout.isMirrored) {
         newPosition.left = (clientRect.right - parentRect.right) * -1
       } else {
         newPosition.left = clientRect.left - parentRect.left
@@ -539,7 +530,7 @@ const handleDrag = (event: MouseEvent) => {
       let parentRect = ((event.target as HTMLElement).offsetParent as any).getBoundingClientRect()
       let clientRect = (event.target as HTMLElement).getBoundingClientRect()
       //                        Add rtl support
-      if (renderRtl.value) {
+      if (layout.isMirrored) {
         newPosition.left = (clientRect.right - parentRect.right) * -1
       } else {
         newPosition.left = clientRect.left - parentRect.left
@@ -553,7 +544,7 @@ const handleDrag = (event: MouseEvent) => {
     case 'dragmove': {
       const coreEvent = createCoreData(lastX, lastY, x, y)
       //                        Add rtl support
-      if (renderRtl.value) {
+      if (layout.isMirrored) {
         newPosition.left = dragging.left - coreEvent.deltaX
       } else {
         newPosition.left = dragging.left + coreEvent.deltaX
@@ -565,7 +556,7 @@ const handleDrag = (event: MouseEvent) => {
   }
   // Get new XY
   let pos
-  if (renderRtl.value) {
+  if (layout.isMirrored) {
     pos = calcXY(newPosition.top, newPosition.left)
   } else {
     pos = calcXY(newPosition.top, newPosition.left)
@@ -592,7 +583,7 @@ const calcPosition = (x: number, y: number, w: number, h: number) => {
   const colWidth = calcColWidth()
   // add rtl support
   let out
-  if (renderRtl.value) {
+  if (layout.isMirrored) {
     out = {
       right: Math.round(colWidth * x + (x + 1) * margin[0]),
       top: Math.round(rowHeight.value * y + (y + 1) * margin[1]),
@@ -707,13 +698,14 @@ const tryMakeResizable = () => {
     let minimum = calcPosition(0, 0, props.minW, props.minH)
     // console.log("### MAX " + JSON.stringify(maximum));
     // console.log("### MIN " + JSON.stringify(minimum));
+
     let opts: any = {
       // preserveAspectRatio: true,
       // allowFrom: "." + this.resizableHandleClass,
       edges: {
-        left: false,
-        right: '.' + resizableHandleClass.value,
-        bottom: '.' + resizableHandleClass.value,
+        left: layout.isMirrored,
+        right: !layout.isMirrored,
+        bottom: true,
         top: false,
       },
       ignoreFrom: props.resizeIgnoreFrom,

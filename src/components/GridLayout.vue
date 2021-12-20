@@ -38,6 +38,7 @@ import {
   validateLayout,
   cloneLayout,
   getAllCollisions,
+  LayoutItemRequired,
 } from '@/helpers/utils'
 import {
   getBreakpointFromWidth,
@@ -134,7 +135,7 @@ const width = ref(null)
 const mergedStyle = ref({})
 let lastLayoutLength = 0
 const isDragging = ref(false)
-const placeholder = reactive({
+const placeholder = reactive<LayoutItemRequired>({
   x: 0,
   y: 0,
   w: 0,
