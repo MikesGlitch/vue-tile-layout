@@ -457,17 +457,3 @@ export function validateLayout(layout: Layout, contextName?: string): void {
     }
   }
 }
-
-/**
- * Hyphenate a camelCase string.
- *
- * @param {String} str
- * @return {String}
- */
-
-// eslint-disable-next-line no-var
-export var hyphenateRE = /([a-z\d])([A-Z])/g
-
-export function hyphenate(str: string) {
-  return str.replace(hyphenateRE, '$1-$2').toLowerCase()
-}
