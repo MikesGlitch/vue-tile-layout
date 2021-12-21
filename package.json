@@ -1,7 +1,17 @@
 {
   "name": "vue-griddy",
   "version": "0.0.0",
-  "main": "dist/vue-griddy.es.js",
+  "main": "./dist/vue-griddy.umd.js",
+  "module": "./dist/vue-griddy.es.js",
+  "files": ["dist"],
+  "types": "./src/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/vue-griddy.es.js",
+      "require": "./dist/vue-griddy.umd.js"
+    },
+    "./style": "./dist/style.css"
+  },
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc --noEmit && vite build",
