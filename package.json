@@ -15,7 +15,7 @@
     "@interactjs/modifiers": "^1.10.2",
     "@vueuse/core": "^7.4.0",
     "core-js": "^3.6.5",
-    "mitt": "^2.1.0",
+    "mitt": "^3.0.0",
     "vue": "^3.2.25"
   },
   "devDependencies": {
