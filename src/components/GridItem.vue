@@ -125,7 +125,7 @@ let rowHeight = ref(30)
 let margin = [10, 10]
 let maxRows = Infinity
 let draggable = ref<boolean | null>(null)
-let resizable: any = ref(null)
+let resizable = ref<boolean | null>(null)
 let useCssTransforms = true
 let useStyleCursor = true
 let isDragging = ref(false)
@@ -139,10 +139,10 @@ let lastH = NaN
 const style: any = ref({})
 let dragEventSet = false
 let resizeEventSet = false
-let previousW: any = null
-let previousH: any = null
-let previousX: any = null
-let previousY: any = null
+let previousW: number | null = null
+let previousH: number | null = null
+let previousX: number | null = null
+let previousY: number | null = null
 // eslint-disable-next-line vue/no-setup-props-destructure
 let innerX = props.x
 // eslint-disable-next-line vue/no-setup-props-destructure
