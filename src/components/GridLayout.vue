@@ -47,6 +47,7 @@ import {
 } from '@/helpers/responsiveUtils'
 
 import GridItem from './GridItem.vue'
+import { DragEvent, Events, ResizeEvent } from '@/helpers/eventBus'
 
 const props = defineProps({
   // If true, the container height swells and contracts to fit contents
@@ -128,7 +129,7 @@ const props = defineProps({
   },
 })
 
-const eventBus = mitt()
+const eventBus = mitt<Events>()
 provide('eventBus', eventBus)
 provide('layout', props)
 const width = ref(null)
@@ -161,7 +162,7 @@ watch(
   () => width.value,
   (newval, oldval) => {
     nextTick(function () {
-      eventBus.emit('updateWidth', width.value)
+      eventBus.emit('updateWidth', { width: width.value })
       if (oldval === null) {
         /*
                             If oldval == null is when the width has never been
@@ -201,22 +202,22 @@ watch(
 
 watch(
   () => props.colNum,
-  (val) => eventBus.emit('setColNum', val)
+  (val) => eventBus.emit('setColNum', { colNum: val })
 )
 
 watch(
   () => props.rowHeight,
-  () => eventBus.emit('setRowHeight', props.rowHeight)
+  () => eventBus.emit('setRowHeight', { rowHeight: props.rowHeight })
 )
 
 watch(
   () => props.isDraggable,
-  () => eventBus.emit('setDraggable', props.isDraggable)
+  () => eventBus.emit('setDraggable', { isDraggable: props.isDraggable })
 )
 
 watch(
   () => props.isResizable,
-  () => eventBus.emit('setResizable', props.isResizable)
+  () => eventBus.emit('setResizable', { isResizable: props.isResizable })
 )
 
 watch(
@@ -224,7 +225,7 @@ watch(
   () => {
     if (!props.responsive) {
       emit('update:layout', originalLayout)
-      eventBus.emit('setColNum', props.colNum)
+      eventBus.emit('setColNum', { colNum: props.colNum })
     }
     onWindowResize()
   }
@@ -232,7 +233,7 @@ watch(
 
 watch(
   () => props.maxRows,
-  () => eventBus.emit('setMaxRows', props.maxRows)
+  () => eventBus.emit('setMaxRows', { maxRows: props.maxRows })
 )
 
 watch(
@@ -241,23 +242,23 @@ watch(
 )
 
 // Accessible refernces of functions for removing in beforeUnmount
-const resizeEventHandler = ({ eventType, i, x, y, h, w }: any): void => {
-  console.log('resizeEventHandler', eventType, i, x, y, h, w)
-  resizeEvent(eventType, i, x, y, h, w)
+const resizeEventHandler = (event: ResizeEvent): void => {
+  console.log('resizeEventHandler', event.eventType, event.i, event.x, event.y, event.h, event.w)
+  resizeEvent(event.eventType, event.i, event.x, event.y, event.h, event.w)
 }
 
-const dragEventHandler = ({ eventType, i, x, y, h, w }: any): void => {
-  dragEvent(eventType, i, x, y, h, w)
+const dragEventHandler = (event: DragEvent): void => {
+  dragEvent(event.eventType, event.i, event.x, event.y, event.h, event.w)
 }
 
-eventBus.on('resizeEvent', resizeEventHandler as unknown as any)
-eventBus.on('dragEvent', dragEventHandler as unknown as any)
+eventBus.on('resize', resizeEventHandler)
+eventBus.on('drag', dragEventHandler)
 emit('layout-created', props.layout)
 
 onBeforeUnmount(() => {
   //Remove listeners
-  eventBus.off('resizeEvent', resizeEventHandler)
-  eventBus.off('dragEvent', dragEventHandler)
+  eventBus.off('resize', resizeEventHandler)
+  eventBus.off('drag', dragEventHandler)
 })
 
 onBeforeMount(() => {
@@ -314,7 +315,7 @@ const layoutUpdate = () => {
     }
 
     compact(props.layout as unknown as any, props.verticalCompact)
-    eventBus.emit('updateWidth', width.value)
+    eventBus.emit('updateWidth', { width: width.value })
     updateHeight()
 
     emit('layout-updated', props.layout)
@@ -331,7 +332,7 @@ const onWindowResize = () => {
   }
 
   console.log('onWindowResize')
-  eventBus.emit('resizeEvent', {})
+  eventBus.emit('resize', {})
 }
 const containerHeight = () => {
   if (!props.autoSize) return
@@ -355,7 +356,7 @@ const dragEvent = (eventName: string, id: string, x: number | undefined, y: numb
     nextTick(function () {
       isDragging.value = true
     })
-    eventBus.emit('updateWidth', width.value)
+    eventBus.emit('updateWidth', { width: width.value })
   } else {
     nextTick(function () {
       isDragging.value = false
@@ -370,7 +371,7 @@ const dragEvent = (eventName: string, id: string, x: number | undefined, y: numb
   updateHeight()
   if (eventName === 'dragend') emit('layout-updated', props.layout)
 }
-const resizeEvent = (eventName: string, id: string, x: any, y: any, h: number, w: number) => {
+const resizeEvent = (eventName?: string, id?: string, x?: any, y?: any, h?: number, w?: number) => {
   let l = getLayoutItem(props.layout as any, id) as any
   //GetLayoutItem sometimes return null object
   if (l === undefined || l === null) {
@@ -406,7 +407,7 @@ const resizeEvent = (eventName: string, id: string, x: any, y: any, h: number, w
   }
 
   if (eventName === 'resizestart' || eventName === 'resizemove') {
-    placeholder.i = id
+    placeholder.i = id as any
     placeholder.x = x
     placeholder.y = y
     placeholder.w = l.w
@@ -415,7 +416,7 @@ const resizeEvent = (eventName: string, id: string, x: any, y: any, h: number, w
       isDragging.value = true
     })
 
-    eventBus.emit('updateWidth', width.value)
+    eventBus.emit('updateWidth', { width: width.value })
   } else {
     nextTick(function () {
       isDragging.value = false
@@ -462,7 +463,7 @@ const responsiveGridLayout = () => {
   emit('update:layout', layout)
 
   lastBreakpoint = newBreakpoint
-  eventBus.emit('setColNum', getColsFromBreakpoint(newBreakpoint, props.cols))
+  eventBus.emit('setColNum', { colNum: getColsFromBreakpoint(newBreakpoint, props.cols) })
 }
 
 // clear all responsive layouts

@@ -18,6 +18,15 @@ import '@interactjs/modifiers'
 import '@interactjs/dev-tools'
 import interact from '@interactjs/interact'
 import { Emitter } from 'mitt'
+import {
+  Events,
+  SetColNumEvent,
+  SetDraggableEvent,
+  SetMaxRowsEvent,
+  SetResizableEvent,
+  SetRowHeightEvent,
+  UpdateWidthEvent,
+} from '@/helpers/eventBus'
 
 const emit = defineEmits<{
   (e: 'container-resized', i: string, h: number, w: number, height: number, width: number): void
@@ -105,13 +114,13 @@ const props = defineProps({
   },
 })
 
-const eventBus = inject<Emitter>('eventBus')
+const eventBus = inject<Emitter<Events>>('eventBus')
 const layout: any = inject('layout')
 
 const item = ref(null)
 let interactObj: any = null
 let cols = ref(1)
-let containerWidth = ref(100)
+let containerWidth = ref<number>(100)
 let rowHeight = ref(30)
 let margin = [10, 10]
 let maxRows = Infinity
@@ -265,36 +274,37 @@ watch(
   }
 )
 
-const updateWidthHandler = (width: any) => {
-  updateWidth(width)
+const updateWidthHandler = (event: UpdateWidthEvent) => {
+  updateWidth(event.width)
 }
 
 const compactHandler = () => {
   compact()
 }
 
-const setDraggableHandler = (isDraggable: any) => {
+const setDraggableHandler = (event: SetDraggableEvent) => {
   if (props.isDraggable === null) {
-    draggable.value = isDraggable
+    draggable.value = event.isDraggable
   }
 }
 
-const setResizableHandler = (isResizable: any) => {
+const setResizableHandler = (event: SetResizableEvent) => {
   if (props.isResizable === null) {
-    resizable.value = isResizable
+    resizable.value = event.isResizable
   }
 }
 
-const setRowHeightHandler = (height: any) => {
-  rowHeight.value = height
+const setRowHeightHandler = (event: SetRowHeightEvent) => {
+  rowHeight.value = event.rowHeight
 }
 
-const setMaxRowsHandler = (maxRow: any) => {
-  maxRows = maxRow
+const setMaxRowsHandler = (event: SetMaxRowsEvent) => {
+  maxRows = event.maxRows
 }
 
-const setColNum = (colNum: any) => {
-  cols.value = parseInt(colNum)
+const setColNum = (event: SetColNumEvent) => {
+  // cols.value = parseInt(event.colNum)
+  cols.value = event.colNum
 }
 
 eventBus?.on('updateWidth', updateWidthHandler)
@@ -490,7 +500,7 @@ const handleResize = (event: MouseEvent) => {
   //   h: pos.h,
   //   w: pos.w,
   // })
-  eventBus?.emit('resizeEvent', {
+  eventBus?.emit('resize', {
     eventType: event.type,
     i: props.i,
     x: innerX,
@@ -569,7 +579,7 @@ const handleDrag = (event: MouseEvent) => {
   if (event.type === 'dragend' && (previousX !== innerX || previousY !== innerY)) {
     emit('moved', props.i, pos.x, pos.y)
   }
-  eventBus?.emit('dragEvent', {
+  eventBus?.emit('drag', {
     eventType: event.type,
     i: props.i,
     x: pos.x,
@@ -651,7 +661,7 @@ const calcWH = (height: number, width: number, autoSizeFlag = false) => {
   return { w, h }
 }
 
-const updateWidth = (width: number, colNum = null) => {
+const updateWidth = (width: any, colNum = null) => {
   containerWidth.value = width
   if (colNum !== undefined && colNum !== null) {
     cols.value = colNum

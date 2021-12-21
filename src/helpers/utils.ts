@@ -177,7 +177,7 @@ export function correctBounds(layout: Layout, bounds: { cols: number }): Layout 
  * @param  {String} id     ID
  * @return {LayoutItem}    Item at ID.
  */
-export function getLayoutItem(layout: Layout, id: string): LayoutItem | undefined {
+export function getLayoutItem(layout: Layout, id?: string): LayoutItem | undefined {
   for (let i = 0, len = layout.length; i < len; i++) {
     if (layout[i].i === id) return layout[i]
   }
