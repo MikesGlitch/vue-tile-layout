@@ -131,7 +131,7 @@ let useStyleCursor = true
 let isDragging = ref(false)
 let dragging: { top: number; left: number } | null = null
 let isResizing = ref(false)
-let resizing: any = null
+let resizing: { width: number; height: number } | null = null
 let lastX = NaN
 let lastY = NaN
 let lastW = NaN
@@ -387,7 +387,7 @@ const createStyle = () => {
     }
   }
 
-  if (isResizing.value) {
+  if (isResizing.value && resizing) {
     pos.width = resizing.width
     pos.height = resizing.height
   }
@@ -396,35 +396,31 @@ const createStyle = () => {
   if (useCssTransforms) {
     //                    Add rtl support
     if (layout.isMirrored) {
-      styleValue = setTransformRtl(pos.top as any, pos.right as any, pos.width as any, pos.height as any)
+      styleValue = setTransformRtl(pos.top, pos.right!, pos.width, pos.height)
     } else {
-      styleValue = setTransform(pos.top as any, pos.left as any, pos.width as any, pos.height as any)
+      styleValue = setTransform(pos.top, pos.left!, pos.width, pos.height)
     }
   } else {
     // top,left (slow)
     //                    Add rtl support
     if (layout.isMirrored) {
-      styleValue = setTopRight(pos.top as any, pos.right as any, pos.width as any, pos.height as any)
+      styleValue = setTopRight(pos.top, pos.right!, pos.width, pos.height)
     } else {
-      styleValue = setTopLeft(pos.top as any, pos.left as any, pos.width as any, pos.height as any)
+      styleValue = setTopLeft(pos.top, pos.left!, pos.width, pos.height)
     }
   }
   style.value = styleValue
 }
 
 const emitContainerResized = () => {
-  // this.style has width and height with trailing 'px'. The
-  // resized event is without them
-  let styleProps: any = {
-    height: 0,
-    width: 0,
-  }
-  for (let prop of ['width', 'height']) {
+  let styleProps: Record<string, number> = { width: 0, height: 0 }
+  for (let prop of Object.keys(styleProps)) {
     let val = style.value[prop]
     let matches = val.match(/^(\d+)px$/)
     if (!matches) return
-    styleProps[prop] = matches[1]
+    styleProps[prop] = matches[1] as number // number of px (without px suffix)
   }
+
   emit('container-resized', props.i, props.h, props.w, styleProps.height, styleProps.width)
 }
 
@@ -449,15 +445,17 @@ const handleResize = (event: MouseEvent) => {
       break
     }
     case 'resizemove': {
-      const coreEvent = createCoreData(lastW, lastH, x, y)
-      if (layout.isMirrored) {
-        newSize.width = resizing.width - coreEvent.deltaX
-      } else {
-        newSize.width = resizing.width + coreEvent.deltaX
+      if (resizing) {
+        const coreEvent = createCoreData(lastW, lastH, x, y)
+        if (layout.isMirrored) {
+          newSize.width = resizing.width - coreEvent.deltaX
+        } else {
+          newSize.width = resizing.width + coreEvent.deltaX
+        }
+        newSize.height = resizing.height + coreEvent.deltaY
+        ///console.log("### resize => " + event.type + ", deltaX=" + coreEvent.deltaX + ", deltaY=" + coreEvent.deltaY);
+        resizing = newSize
       }
-      newSize.height = resizing.height + coreEvent.deltaY
-      ///console.log("### resize => " + event.type + ", deltaX=" + coreEvent.deltaX + ", deltaY=" + coreEvent.deltaY);
-      resizing = newSize
       break
     }
     case 'resizeend': {

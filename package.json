@@ -26,7 +26,7 @@
     "@vueuse/core": "^7.4.0",
     "core-js": "^3.20.0",
     "mitt": "^3.0.0",
-    "vue": "^3.2.25"
+    "vue": "^3.0.0"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^5.8.0",

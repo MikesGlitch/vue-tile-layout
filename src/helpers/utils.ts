@@ -330,7 +330,7 @@ export function perc(num: number): string {
   return num * 100 + '%'
 }
 
-export function setTransform(top: string, left: string, width: string, height: string): Object {
+export function setTransform(top: number, left: number, width: number, height: number): Object {
   // Replace unitless items with px
   const translate = 'translate3d(' + left + 'px,' + top + 'px, 0)'
   return {
@@ -353,7 +353,7 @@ export function setTransform(top: string, left: string, width: string, height: s
  * @param height
  * @returns {{transform: string, WebkitTransform: string, MozTransform: string, msTransform: string, OTransform: string, width: string, height: string, position: string}}
  */
-export function setTransformRtl(top: string, right: number, width: string, height: string): Object {
+export function setTransformRtl(top: number, right: number, width: number, height: number): Object {
   // Replace unitless items with px
   const translate = 'translate3d(' + right * -1 + 'px,' + top + 'px, 0)'
   return {
@@ -368,7 +368,7 @@ export function setTransformRtl(top: string, right: number, width: string, heigh
   }
 }
 
-export function setTopLeft(top: string, left: string, width: string, height: string): Object {
+export function setTopLeft(top: number, left: number, width: number, height: number): Object {
   return {
     top: top + 'px',
     left: left + 'px',
@@ -386,7 +386,7 @@ export function setTopLeft(top: string, left: string, width: string, height: str
  * @param height
  * @returns {{top: string, right: string, width: string, height: string, position: string}}
  */
-export function setTopRight(top: string, right: string, width: string, height: string): Object {
+export function setTopRight(top: number, right: number, width: number, height: number): Object {
   return {
     top: top + 'px',
     right: right + 'px',

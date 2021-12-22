@@ -82,8 +82,7 @@
     <button @click="reloadWithDelay">Reload with delay</button>
   </div>
 
-  <!-- <div :style="{ width: containerWidth + 'px' }"> -->
-  <div>
+  <div :style="{ width: containerWidth + 'px' }">
     <grid-layout
       v-model:layout="layout"
       :auto-size="layoutSettings.autoSize"
@@ -117,7 +116,7 @@ import { ref } from 'vue'
 import GridItem from './components/GridItem.vue'
 import GridLayout from './components/GridLayout.vue'
 
-const containerWidth = ref(1000)
+const containerWidth = ref(1800)
 
 const layoutSettings = ref({
   autoSize: true,
