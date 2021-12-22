@@ -158,10 +158,10 @@ const draggableOrResizableAndNotStatic = computed(() => (draggable.value || resi
 
 const classObj = computed(() => {
   return {
-    'vue-resizable': resizableAndNotStatic,
+    'vue-resizable': resizableAndNotStatic.value,
     static: props.static,
-    resizing: isResizing,
-    'vue-draggable-dragging': isDragging,
+    resizing: isResizing.value,
+    'vue-draggable-dragging': isDragging.value,
     cssTransforms: useCssTransforms,
     'render-rtl': layout.isMirrored,
     'disable-userselect': isDragging.value,
@@ -345,8 +345,7 @@ onMounted(() => {
   }
 
   rowHeight.value = layout.rowHeight
-  containerWidth.value = layout.width !== null ? layout.width : 100
-  margin = layout.margin !== undefined ? layout.margin : [10, 10]
+  margin = layout.margin ? layout.margin : [10, 10]
   maxRows = layout.maxRows
 
   if (props.isDraggable === null) {
@@ -376,7 +375,6 @@ const createStyle = () => {
   }
 
   let pos = calcPosition(innerX, innerY, innerW, innerH)
-
   if (isDragging.value && dragging) {
     pos.top = dragging.top
     //                    Add rtl support
@@ -702,7 +700,6 @@ const tryMakeResizable = () => {
   if (interactObj === null || interactObj === undefined) {
     interactObj = interact(item.value)
     if (!useStyleCursor) {
-      console.log('setting style cursor')
       interactObj.styleCursor(false)
     }
   }

@@ -163,7 +163,7 @@ watch(
   () => width.value,
   (newval, oldval) => {
     nextTick(function () {
-      eventBus.emit('updateWidth', { width: width.value})
+      eventBus.emit('updateWidth', { width: width.value })
       if (oldval === null) {
         /*
                             If oldval == null is when the width has never been
@@ -244,7 +244,7 @@ watch(
 
 // Accessible refernces of functions for removing in beforeUnmount
 const resizeEventHandler = (event: ResizeEvent): void => {
-  console.log('resizeEventHandler', event.eventType, event.i, event.x, event.y, event.h, event.w)
+  // console.log('resizeEventHandler', event.eventType, event.i, event.x, event.y, event.h, event.w)
   resizeEvent(event.eventType, event.i, event.x, event.y, event.h, event.w)
 }
 
@@ -285,7 +285,6 @@ onMounted(() => {
       updateHeight()
       nextTick(function () {
         useResizeObserver(item.value, () => {
-          console.log('useResizeObserver triggered')
           onWindowResize()
         })
       })
@@ -332,8 +331,8 @@ const onWindowResize = () => {
     width.value = item.value.offsetWidth
   }
 
-  console.log('onWindowResize')
   eventBus.emit('resize', {})
+  eventBus.emit('updateWidth', { width: width.value }) // fixes reload with delay issue, should it be in resize? or is there a better way to deal with this?
 }
 const containerHeight = () => {
   if (!props.autoSize) return
