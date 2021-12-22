@@ -11,12 +11,12 @@ import { getControlPosition, createCoreData } from '@/helpers/draggableUtils'
 import { getColsFromBreakpoint } from '@/helpers/responsiveUtils'
 import { defineProps, inject, ref, computed, watch, onBeforeUnmount, onMounted, defineEmits } from 'vue'
 
-import '@interactjs/auto-start'
-import '@interactjs/actions/drag'
-import '@interactjs/actions/resize'
-import '@interactjs/modifiers'
-import '@interactjs/dev-tools'
-import interact from '@interactjs/interact'
+import '@interactjs/auto-start/index.prod'
+import '@interactjs/actions/drag/index.prod'
+import '@interactjs/actions/resize/index.prod'
+import '@interactjs/modifiers/index.prod'
+import '@interactjs/dev-tools/index.prod' // consider removing
+import interact from '@interactjs/interact/index.prod'
 import { Emitter } from 'mitt'
 import {
   Events,

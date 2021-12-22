@@ -1,1 +1,1 @@
-declare module '@interactjs/interact'
+declare module '@interactjs/interact/index.prod'
