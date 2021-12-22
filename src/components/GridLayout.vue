@@ -40,6 +40,7 @@ import {
   getAllCollisions,
   LayoutItemRequired,
 } from '@/helpers/utils'
+
 import {
   getBreakpointFromWidth,
   getColsFromBreakpoint,
@@ -132,7 +133,7 @@ const props = defineProps({
 const eventBus = mitt<Events>()
 provide('eventBus', eventBus)
 provide('layout', props)
-const width = ref(null)
+const width = ref<number>(100) // default 100 - same on grid item
 const mergedStyle = ref({})
 let lastLayoutLength = 0
 const isDragging = ref(false)
@@ -146,7 +147,7 @@ const placeholder = reactive<LayoutItemRequired>({
 let layouts: any = {} // array to store all layouts from different breakpoints
 let lastBreakpoint: any = null // store last active breakpoint
 let originalLayout: any = null // store original Layout
-const item = ref(null)
+const item = ref<HTMLDivElement | null>(null)
 
 const emit = defineEmits<{
   (e: 'layout-ready', layout: Array<unknown>): void
@@ -162,7 +163,7 @@ watch(
   () => width.value,
   (newval, oldval) => {
     nextTick(function () {
-      eventBus.emit('updateWidth', { width: width.value })
+      eventBus.emit('updateWidth', { width: width.value})
       if (oldval === null) {
         /*
                             If oldval == null is when the width has never been
@@ -283,7 +284,7 @@ onMounted(() => {
 
       updateHeight()
       nextTick(function () {
-        useResizeObserver(item, () => {
+        useResizeObserver(item.value, () => {
           console.log('useResizeObserver triggered')
           onWindowResize()
         })
@@ -328,7 +329,7 @@ const updateHeight = () => {
 }
 const onWindowResize = () => {
   if (item.value !== null && item.value !== undefined) {
-    width.value = (item.value as any).offsetWidth
+    width.value = item.value.offsetWidth
   }
 
   console.log('onWindowResize')
@@ -493,7 +494,7 @@ const findDifference = (layout: unknown[], originalLayout: any[]) => {
 }
 </script>
 
-<style>
+<style scoped>
 .vue-grid-layout {
   position: relative;
   transition: height 200ms ease;

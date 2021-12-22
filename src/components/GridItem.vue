@@ -114,10 +114,10 @@ const props = defineProps({
   },
 })
 
-const eventBus = inject<Emitter<Events>>('eventBus')
+const eventBus = inject<Emitter<Events>>('eventBus')!
 const layout: any = inject('layout')
 
-const item = ref(null)
+const item = ref<HTMLDivElement | null>(null)
 let interactObj: any = null
 let cols = ref(1)
 let containerWidth = ref<number>(100)
@@ -129,7 +129,7 @@ let resizable = ref<boolean | null>(null)
 let useCssTransforms = true
 let useStyleCursor = true
 let isDragging = ref(false)
-let dragging: any = null
+let dragging: { top: number; left: number } | null = null
 let isResizing = ref(false)
 let resizing: any = null
 let lastX = NaN
@@ -189,6 +189,15 @@ watch(
   () => {
     tryMakeDraggable()
     tryMakeResizable()
+  }
+)
+
+watch(
+  () => layout.useStyleCursor,
+  () => {
+    if (interactObj) {
+      interactObj.styleCursor(layout.useStyleCursor)
+    }
   }
 )
 
@@ -307,22 +316,22 @@ const setColNum = (event: SetColNumEvent) => {
   cols.value = event.colNum
 }
 
-eventBus?.on('updateWidth', updateWidthHandler)
-eventBus?.on('compact', compactHandler)
-eventBus?.on('setDraggable', setDraggableHandler)
-eventBus?.on('setResizable', setResizableHandler)
-eventBus?.on('setRowHeight', setRowHeightHandler)
-eventBus?.on('setMaxRows', setMaxRowsHandler)
-eventBus?.on('setColNum', setColNum)
+eventBus.on('updateWidth', updateWidthHandler)
+eventBus.on('compact', compactHandler)
+eventBus.on('setDraggable', setDraggableHandler)
+eventBus.on('setResizable', setResizableHandler)
+eventBus.on('setRowHeight', setRowHeightHandler)
+eventBus.on('setMaxRows', setMaxRowsHandler)
+eventBus.on('setColNum', setColNum)
 
 onBeforeUnmount(() => {
-  eventBus?.off('updateWidth', updateWidthHandler)
-  eventBus?.off('compact', compactHandler)
-  eventBus?.off('setDraggable', setDraggableHandler)
-  eventBus?.off('setResizable', setResizableHandler)
-  eventBus?.off('setRowHeight', setRowHeightHandler)
-  eventBus?.off('setMaxRows', setMaxRowsHandler)
-  eventBus?.off('setColNum', setColNum)
+  eventBus.off('updateWidth', updateWidthHandler)
+  eventBus.off('compact', compactHandler)
+  eventBus.off('setDraggable', setDraggableHandler)
+  eventBus.off('setResizable', setResizableHandler)
+  eventBus.off('setRowHeight', setRowHeightHandler)
+  eventBus.off('setMaxRows', setMaxRowsHandler)
+  eventBus.off('setColNum', setColNum)
   if (interactObj) {
     interactObj.unset() // destroy interact intance
   }
@@ -368,7 +377,7 @@ const createStyle = () => {
 
   let pos = calcPosition(innerX, innerY, innerW, innerH)
 
-  if (isDragging.value) {
+  if (isDragging.value && dragging) {
     pos.top = dragging.top
     //                    Add rtl support
     if (layout.isMirrored) {
@@ -377,6 +386,7 @@ const createStyle = () => {
       pos.left = dragging.left
     }
   }
+
   if (isResizing.value) {
     pos.width = resizing.width
     pos.height = resizing.height
@@ -492,14 +502,6 @@ const handleResize = (event: MouseEvent) => {
     emit('resized', props.i, pos.h, pos.w, newSize.height, newSize.width)
   }
 
-  // console.log('grid item handleResize', {
-  //   eventType: event.type,
-  //   i: props.i,
-  //   x: innerX,
-  //   y: innerY,
-  //   h: pos.h,
-  //   w: pos.w,
-  // })
   eventBus?.emit('resize', {
     eventType: event.type,
     i: props.i,
@@ -553,14 +555,16 @@ const handleDrag = (event: MouseEvent) => {
     }
     case 'dragmove': {
       const coreEvent = createCoreData(lastX, lastY, x, y)
-      //                        Add rtl support
-      if (layout.isMirrored) {
-        newPosition.left = dragging.left - coreEvent.deltaX
-      } else {
-        newPosition.left = dragging.left + coreEvent.deltaX
+      // Add rtl support
+      if (dragging) {
+        if (layout.isMirrored) {
+          newPosition.left = dragging.left - coreEvent.deltaX
+        } else {
+          newPosition.left = dragging.left + coreEvent.deltaX
+        }
+        newPosition.top = dragging.top + coreEvent.deltaY
+        dragging = newPosition
       }
-      newPosition.top = dragging.top + coreEvent.deltaY
-      dragging = newPosition
       break
     }
   }
@@ -661,7 +665,7 @@ const calcWH = (height: number, width: number, autoSizeFlag = false) => {
   return { w, h }
 }
 
-const updateWidth = (width: any, colNum = null) => {
+const updateWidth = (width: number, colNum = null) => {
   containerWidth.value = width
   if (colNum !== undefined && colNum !== null) {
     cols.value = colNum
@@ -700,6 +704,7 @@ const tryMakeResizable = () => {
   if (interactObj === null || interactObj === undefined) {
     interactObj = interact(item.value)
     if (!useStyleCursor) {
+      console.log('setting style cursor')
       interactObj.styleCursor(false)
     }
   }
@@ -754,7 +759,7 @@ const tryMakeResizable = () => {
 }
 </script>
 
-<style>
+<style scoped>
 .vue-grid-item {
   touch-action: none;
   transition: all 200ms ease;

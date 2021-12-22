@@ -1,5 +1,5 @@
 export interface UpdateWidthEvent {
-  width: number | null
+  width: number
 }
 
 export interface SetColNumEvent {
