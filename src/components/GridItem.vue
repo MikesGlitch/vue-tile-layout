@@ -311,8 +311,7 @@ const setMaxRowsHandler = (event: SetMaxRowsEvent) => {
   maxRows = event.maxRows
 }
 
-const setColNum = (event: SetColNumEvent) => {
-  // cols.value = parseInt(event.colNum)
+const setColNumHandler = (event: SetColNumEvent) => {
   cols.value = event.colNum
 }
 
@@ -322,7 +321,7 @@ eventBus.on('setDraggable', setDraggableHandler)
 eventBus.on('setResizable', setResizableHandler)
 eventBus.on('setRowHeight', setRowHeightHandler)
 eventBus.on('setMaxRows', setMaxRowsHandler)
-eventBus.on('setColNum', setColNum)
+eventBus.on('setColNum', setColNumHandler)
 
 onBeforeUnmount(() => {
   eventBus.off('updateWidth', updateWidthHandler)
@@ -331,7 +330,7 @@ onBeforeUnmount(() => {
   eventBus.off('setResizable', setResizableHandler)
   eventBus.off('setRowHeight', setRowHeightHandler)
   eventBus.off('setMaxRows', setMaxRowsHandler)
-  eventBus.off('setColNum', setColNum)
+  eventBus.off('setColNum', setColNumHandler)
   if (interactObj) {
     interactObj.unset() // destroy interact intance
   }

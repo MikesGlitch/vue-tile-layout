@@ -242,24 +242,10 @@ watch(
   () => updateHeight()
 )
 
-// Accessible refernces of functions for removing in beforeUnmount
-const resizeItemEventHandler = (event: ResizeItemEvent): void => {
-  // console.log('resizeEventHandler', event.eventType, event.i, event.x, event.y, event.h, event.w)
-  resizeItemEvent(event.eventType, event.i, event.x, event.y, event.h, event.w)
-}
-
-const dragEventHandler = (event: DragItemEvent): void => {
-  dragEvent(event.eventType, event.i, event.x, event.y, event.h, event.w)
-}
-
-eventBus.on('resizeItem', resizeItemEventHandler)
-eventBus.on('dragItem', dragEventHandler)
-emit('layout-created', props.layout)
-
 onBeforeUnmount(() => {
   //Remove listeners
   eventBus.off('resizeItem', resizeItemEventHandler)
-  eventBus.off('dragItem', dragEventHandler)
+  eventBus.off('dragItem', dragItemEventHandler)
 })
 
 onBeforeMount(() => {
@@ -342,15 +328,17 @@ const containerHeight = () => {
     bottom(props.layout as any) * (props.rowHeight + (props.margin as any)[1]) + (props.margin as any)[1] + 'px'
   return containerHeight
 }
-const dragEvent = (eventName: string, id: string, x: number | undefined, y: number, h: any, w: any) => {
-  let l = getLayoutItem(props.layout as any, id) as any
+const dragItemEventHandler = (event: DragItemEvent) => {
+  // eventName: string, id: string, x: number | undefined, y: number, h: any, w: any
+  const { eventType, i, x, y, h, w } = event
+  let l = getLayoutItem(props.layout as any, i) as any
   //GetLayoutItem sometimes returns null object
   if (l === undefined || l === null) {
     l = { x: 0, y: 0 }
   }
 
-  if (eventName === 'dragmove' || eventName === 'dragstart') {
-    placeholder.i = id
+  if (eventType === 'dragmove' || eventType === 'dragstart') {
+    placeholder.i = i
     placeholder.x = l.x
     placeholder.y = l.y
     placeholder.w = w
@@ -371,11 +359,11 @@ const dragEvent = (eventName: string, id: string, x: number | undefined, y: numb
   // needed because vue can't detect changes on array element properties
   eventBus.emit('compact')
   updateHeight()
-  if (eventName === 'dragend') emit('layout-updated', props.layout)
+  if (eventType === 'dragend') emit('layout-updated', props.layout)
 }
-const resizeItemEvent = (eventName: string, id: string, x: number, y: number, h: number, w: number) => {
-  console.log('resize item event?')
-  let l = getLayoutItem(props.layout as any, id) as any
+const resizeItemEventHandler = (event: ResizeItemEvent) => {
+  const { eventType, i, x, y, h, w } = event
+  let l = getLayoutItem(props.layout as any, i) as any
   //GetLayoutItem sometimes return null object
   if (l === undefined || l === null) {
     l = { h: 0, w: 0 }
@@ -409,21 +397,17 @@ const resizeItemEvent = (eventName: string, id: string, x: number, y: number, h:
     l.h = h
   }
 
-  if (eventName === 'resizestart' || eventName === 'resizemove') {
-    placeholder.i = id as any
+  if (eventType === 'resizestart' || eventType === 'resizemove') {
+    placeholder.i = i
     placeholder.x = x
     placeholder.y = y
     placeholder.w = l.w
     placeholder.h = l.h
-    nextTick(function () {
-      isDragging.value = true
-    })
+    nextTick(() => (isDragging.value = true))
 
     eventBus.emit('updateWidth', { width: width.value })
   } else {
-    nextTick(function () {
-      isDragging.value = false
-    })
+    nextTick(() => (isDragging.value = false))
   }
 
   if (props.responsive) responsiveGridLayout()
@@ -432,7 +416,7 @@ const resizeItemEvent = (eventName: string, id: string, x: number, y: number, h:
   eventBus.emit('compact')
   updateHeight()
 
-  if (eventName === 'resizeend') emit('layout-updated', props.layout)
+  if (eventType === 'resizeend') emit('layout-updated', props.layout)
 }
 
 // finds or generates new layouts for set breakpoints
@@ -494,6 +478,10 @@ const findDifference = (layout: unknown[], originalLayout: any[]) => {
   //Combine the two arrays of unique entries#
   return uniqueResultOne.concat(uniqueResultTwo)
 }
+
+eventBus.on('resizeItem', resizeItemEventHandler)
+eventBus.on('dragItem', dragItemEventHandler)
+emit('layout-created', props.layout)
 </script>
 
 <style scoped>
