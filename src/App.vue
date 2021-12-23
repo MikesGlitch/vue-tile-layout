@@ -28,7 +28,7 @@
     <h1>Settings</h1>
     <h5>Layout</h5>
     <div>
-      <label for="containerWidth">Container width</label>
+      <label for="containerWidth">Container width (%)</label>
       <input id="containerWidth" v-model="containerWidth" type="number" />
     </div>
     <div>
@@ -82,7 +82,7 @@
     <button @click="reloadWithDelay">Reload with delay</button>
   </div>
 
-  <div :style="{ width: containerWidth + 'px' }">
+  <div :style="{ width: containerWidth + '%' }">
     <grid-layout
       v-model:layout="layout"
       :auto-size="layoutSettings.autoSize"
@@ -116,7 +116,7 @@ import { ref } from 'vue'
 import GridItem from './components/GridItem.vue'
 import GridLayout from './components/GridLayout.vue'
 
-const containerWidth = ref(1800)
+const containerWidth = ref(100)
 
 const layoutSettings = ref({
   autoSize: true,
@@ -128,7 +128,7 @@ const layoutSettings = ref({
   isMirrored: false,
   useCssTransforms: true,
   verticalCompact: true,
-  responsive: false,
+  responsive: true,
   preventCollision: false,
   useStyleCursor: true,
 })

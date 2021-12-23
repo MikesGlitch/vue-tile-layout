@@ -48,7 +48,7 @@ import {
 } from '@/helpers/responsiveUtils'
 
 import GridItem from './GridItem.vue'
-import { DragEvent, Events, ResizeEvent } from '@/helpers/eventBus'
+import { DragItemEvent, Events, ResizeItemEvent } from '@/helpers/eventBus'
 
 const props = defineProps({
   // If true, the container height swells and contracts to fit contents
@@ -166,25 +166,25 @@ watch(
       eventBus.emit('updateWidth', { width: width.value })
       if (oldval === null) {
         /*
-                            If oldval == null is when the width has never been
-                            set before. That only occurs when mouting is
-                            finished, and onWindowResize has been called and
-                            this.width has been changed the first time after it
-                            got set to null in the constructor. It is now time
-                            to issue layout-ready events as the GridItems have
-                            their sizes configured properly.
+            If oldval == null is when the width has never been
+            set before. That only occurs when mouting is
+            finished, and onContainerResize has been called and
+            this.width has been changed the first time after it
+            got set to null in the constructor. It is now time
+            to issue layout-ready events as the GridItems have
+            their sizes configured properly.
 
-                            The reason for emitting the layout-ready events on
-                            the next tick is to allow for the newly-emitted
-                            updateWidth event (above) to have reached the
-                            children GridItem-s and had their effect, so we're
-                            sure that they have the final size before we emit
-                            layout-ready (for this GridLayout) and
-                            item-layout-ready (for the GridItem-s).
+            The reason for emitting the layout-ready events on
+            the next tick is to allow for the newly-emitted
+            updateWidth event (above) to have reached the
+            children GridItem-s and had their effect, so we're
+            sure that they have the final size before we emit
+            layout-ready (for this GridLayout) and
+            item-layout-ready (for the GridItem-s).
 
-                            This way any client event handlers can reliably
-                            invistigate stable sizes of GridItem-s.
-                        */
+            This way any client event handlers can reliably
+            invistigate stable sizes of GridItem-s.
+        */
         nextTick(() => {
           emit('layout-ready', props.layout)
         })
@@ -228,7 +228,7 @@ watch(
       emit('update:layout', originalLayout)
       eventBus.emit('setColNum', { colNum: props.colNum })
     }
-    onWindowResize()
+    onContainerResize()
   }
 )
 
@@ -243,23 +243,23 @@ watch(
 )
 
 // Accessible refernces of functions for removing in beforeUnmount
-const resizeEventHandler = (event: ResizeEvent): void => {
+const resizeItemEventHandler = (event: ResizeItemEvent): void => {
   // console.log('resizeEventHandler', event.eventType, event.i, event.x, event.y, event.h, event.w)
-  resizeEvent(event.eventType, event.i, event.x, event.y, event.h, event.w)
+  resizeItemEvent(event.eventType, event.i, event.x, event.y, event.h, event.w)
 }
 
-const dragEventHandler = (event: DragEvent): void => {
+const dragEventHandler = (event: DragItemEvent): void => {
   dragEvent(event.eventType, event.i, event.x, event.y, event.h, event.w)
 }
 
-eventBus.on('resize', resizeEventHandler)
-eventBus.on('drag', dragEventHandler)
+eventBus.on('resizeItem', resizeItemEventHandler)
+eventBus.on('dragItem', dragEventHandler)
 emit('layout-created', props.layout)
 
 onBeforeUnmount(() => {
   //Remove listeners
-  eventBus.off('resize', resizeEventHandler)
-  eventBus.off('drag', dragEventHandler)
+  eventBus.off('resizeItem', resizeItemEventHandler)
+  eventBus.off('dragItem', dragEventHandler)
 })
 
 onBeforeMount(() => {
@@ -274,8 +274,7 @@ onMounted(() => {
     originalLayout = props.layout
     // eslint-disable-next-line @typescript-eslint/no-this-alias
     nextTick(function () {
-      onWindowResize()
-
+      onContainerResize()
       initResponsiveFeatures()
 
       compact(props.layout as any, props.verticalCompact)
@@ -285,7 +284,7 @@ onMounted(() => {
       updateHeight()
       nextTick(function () {
         useResizeObserver(item.value, () => {
-          onWindowResize()
+          onContainerResize()
         })
       })
     })
@@ -326,12 +325,15 @@ const updateHeight = () => {
     height: containerHeight(),
   }
 }
-const onWindowResize = () => {
+const onContainerResize = () => {
   if (item.value !== null && item.value !== undefined) {
     width.value = item.value.offsetWidth
   }
 
-  eventBus.emit('resize', {})
+  if (props.responsive) responsiveGridLayout()
+  compact(props.layout as any, props.verticalCompact)
+  eventBus.emit('compact')
+  updateHeight()
   eventBus.emit('updateWidth', { width: width.value }) // fixes reload with delay issue, should it be in resize? or is there a better way to deal with this?
 }
 const containerHeight = () => {
@@ -371,7 +373,8 @@ const dragEvent = (eventName: string, id: string, x: number | undefined, y: numb
   updateHeight()
   if (eventName === 'dragend') emit('layout-updated', props.layout)
 }
-const resizeEvent = (eventName?: string, id?: string, x?: any, y?: any, h?: number, w?: number) => {
+const resizeItemEvent = (eventName: string, id: string, x: number, y: number, h: number, w: number) => {
+  console.log('resize item event?')
   let l = getLayoutItem(props.layout as any, id) as any
   //GetLayoutItem sometimes return null object
   if (l === undefined || l === null) {

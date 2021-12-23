@@ -22,7 +22,7 @@ export interface SetMaxRowsEvent {
   maxRows: number
 }
 
-export interface DragEvent {
+export interface DragItemEvent {
   eventType: string
   i: string
   x: number
@@ -31,13 +31,13 @@ export interface DragEvent {
   w: number
 }
 
-export interface ResizeEvent {
-  eventType?: string
-  i?: string
-  x?: number
-  y?: number
-  h?: number
-  w?: number
+export interface ResizeItemEvent {
+  eventType: string
+  i: string
+  x: number
+  y: number
+  h: number
+  w: number
 }
 
 export type Events = {
@@ -47,7 +47,7 @@ export type Events = {
   setDraggable: SetDraggableEvent
   setResizable: SetResizableEvent
   setMaxRows: SetMaxRowsEvent
-  resize: ResizeEvent
+  resizeItem: ResizeItemEvent
   compact: unknown
-  drag: DragEvent
+  dragItem: DragItemEvent
 }

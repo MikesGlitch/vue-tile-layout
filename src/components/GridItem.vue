@@ -498,7 +498,7 @@ const handleResize = (event: MouseEvent) => {
     emit('resized', props.i, pos.h, pos.w, newSize.height, newSize.width)
   }
 
-  eventBus?.emit('resize', {
+  eventBus?.emit('resizeItem', {
     eventType: event.type,
     i: props.i,
     x: innerX,
@@ -579,7 +579,7 @@ const handleDrag = (event: MouseEvent) => {
   if (event.type === 'dragend' && (previousX !== innerX || previousY !== innerY)) {
     emit('moved', props.i, pos.x, pos.y)
   }
-  eventBus?.emit('drag', {
+  eventBus?.emit('dragItem', {
     eventType: event.type,
     i: props.i,
     x: pos.x,
