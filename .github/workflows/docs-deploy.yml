@@ -3,9 +3,6 @@ name: Docs Build and Deploy
 on:
   push:
     branches: [ main ]
-    paths:
-      - 'docs-site/**'
-      - '.github/**'
 
 jobs:
   build-and-deploy:
