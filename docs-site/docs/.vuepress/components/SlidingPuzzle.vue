@@ -20,16 +20,16 @@
 
   <div ref="tileGameContainer">
     <grid-layout
+      v-model:layout="layout"
       class="tile-game"
       :style="tileGameStyle"
-      v-model:layout="layout"
       :margin="[0, 0]"
-      :verticalCompact="true"
-      :colNum="numTiles"
-      :maxRows="numTiles"
+      :vertical-compact="true"
+      :col-num="numTiles"
+      :max-rows="numTiles"
       :is-draggable="true"
       :is-resizable="false"
-      :rowHeight="tileWidth"
+      :row-height="tileWidth"
     >
       <grid-item
         v-for="item in layout"
@@ -40,9 +40,12 @@
         :w="item.w"
         :h="item.h"
         :i="item.i"
+        :static="item.static"
+        :is-draggable="item.isDraggable"
+        @moved="() => onMoved()"
       >
         <div style="width: 100%; height: 100%; text-align: center; border: 1px solid black">
-          <span>{{ item.i }}</span>
+          <span>{{ item.i }} - {{ item.static }} - {{ item.isDraggable }}</span>
         </div>
       </grid-item>
     </grid-layout>
@@ -77,7 +80,58 @@ const layout = ref([
   { x: 2, y: 2, w: 1, h: 1, i: '8', tile: 'empty' }, // Empty - needs to be empty tile to allow for dragging on top of
 ])
 
+const allowTileToMove = (x: number, y: number) => {
+  const item = layout.value.find((item) => item.x === x && item.y === y)
+  if (item) {
+    item.static = false
+    item.isDraggable = true
+  }
+}
+
+const onMoved = () => {
+  setupBoard()
+}
+
 const setupBoard = () => {
+  layout.value.forEach((item) => {
+    item.static = true
+    item.isDraggable = false
+  })
+
+  const emptyTile = layout.value.find((item) => item.tile === 'empty')
+  emptyTile.isDraggable = false
+  emptyTile.static = false
+
+  // get positions that can move into the empty tile
+  // dragging x when it's 1 on either side
+  const leftSide = emptyTile.x - 1
+  const rightSide = emptyTile.x + 1
+  const validLeftX = leftSide >= 0 ? leftSide : undefined
+  const validRightX = rightSide <= numTiles - 1 ? rightSide : undefined
+
+  if (validLeftX !== undefined) {
+    allowTileToMove(validLeftX, emptyTile.y)
+  }
+
+  if (validRightX !== undefined) {
+    allowTileToMove(validRightX, emptyTile.y)
+  }
+
+  const bottomSide = emptyTile.y - 1
+  const topSide = emptyTile.y + 1
+  const validBottomY = bottomSide >= 0 ? bottomSide : undefined
+  const validTopY = topSide <= numTiles - 1 ? topSide : undefined
+
+  if (validBottomY !== undefined) {
+    allowTileToMove(emptyTile.x, validBottomY)
+  }
+
+  if (validTopY !== undefined) {
+    allowTileToMove(emptyTile.x, validTopY)
+  }
+}
+
+const adjustTileSize = () => {
   if (tileGameContainer.value) {
     // Adjusting the size of the tiles etc based on the size of the container
     tileWidth.value = tileGameContainer.value.offsetWidth / numTiles
@@ -85,8 +139,9 @@ const setupBoard = () => {
 }
 
 onMounted(() => {
+  adjustTileSize()
+  window.addEventListener('resize', () => adjustTileSize(), true)
   setupBoard()
-  window.addEventListener('resize', (event) => setupBoard(), true)
 })
 </script>
 
