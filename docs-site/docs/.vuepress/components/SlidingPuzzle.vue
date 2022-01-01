@@ -43,9 +43,10 @@ const tileGameStyle = computed(() => {
   return { width: fullWidth + 'px', height: fullWidth + 'px' }
 })
 
-const tileGameContainer = ref<HtmlDivElement | null>(null)
+const tileGameContainer = ref<HTMLDivElement | null>(null)
 
-const layout = ref([
+// Todo - get the types
+const layout = ref<{ x: number, y: number, w: number, h: number, i: string, tile: string, static?: boolean, isDraggable?: boolean }[]>([
   { x: 0, y: 1, w: 1, h: 1, i: '0', tile: '0' },
   { x: 0, y: 0, w: 1, h: 1, i: '1', tile: '1' },
   { x: 1, y: 1, w: 1, h: 1, i: '2', tile: '2' },
@@ -66,10 +67,10 @@ const allowTileToMove = (x: number, y: number) => {
 }
 
 const onMove = (i: string, newX: number, newY: number) => {
-  let layoutItemMovingFrom = layout.value[i]
+  let layoutItemMovingFrom = layout.value.find((layoutItem) => layoutItem.i === i)!
   
   // it's only valid to move to the empty tile
-  let emptyTile = layout.value.find((layoutItem) => layoutItem.tile === 'empty')
+  let emptyTile = layout.value.find((layoutItem) => layoutItem.tile === 'empty')!
 
   const isMovingHorizontally = newX >= emptyTile.x && newX < emptyTile.x + emptyTile.w && layoutItemMovingFrom.y == emptyTile.y && i != emptyTile.i
   if (isMovingHorizontally) {
@@ -96,7 +97,7 @@ const setupBoard = () => {
     item.isDraggable = false
   })
 
-  const emptyTile = layout.value.find((item) => item.tile === 'empty')
+  const emptyTile = layout.value.find((item) => item.tile === 'empty')!
   emptyTile.isDraggable = false
   emptyTile.static = false
 

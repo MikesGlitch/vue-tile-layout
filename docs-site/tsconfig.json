@@ -10,11 +10,6 @@
     "resolveJsonModule": true,
     "esModuleInterop": true,
     "lib": ["esnext", "dom"],
-    "paths": {
-      "@/*": [
-        "./src/*"
-      ]
-    },
   },
-  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.vue"]
+  "include": ["docs/.vuepress/**/*.ts", "docs/.vuepress/**/*.d.ts", "docs/.vuepress/**/*.vue"]
 }
