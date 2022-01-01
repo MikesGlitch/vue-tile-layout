@@ -1,23 +1,4 @@
 <template>
-  <h5>Still todo:</h5>
-  <ul>
-    <li>
-      MaxRows only applies to items when dragging or resizing, if you drag to position 0,0 when the column already has
-      the max rows, it will allow it and the col will have one over the max rows
-    </li>
-    <li>
-      Figure out a way to do rules on whether or not something can move. Here we want to validate whether something can
-      move to a place
-    </li>
-    <li>
-      https://github.com/MikesGlitch/agnostos/blob/master/pet-dating/sapper-ui/src/components/slidingPuzzle.svelte
-    </li>
-    <li>
-      May need to create an event to allow re-structuring on the layout based on a drag position. Instead of it default
-      to a "stack" it needs to allow configuration to potentially allow the tile to switch places
-    </li>
-  </ul>
-
   <div ref="tileGameContainer">
     <grid-layout
       v-model:layout="layout"
@@ -30,6 +11,7 @@
       :is-draggable="true"
       :is-resizable="false"
       :row-height="tileWidth"
+      :prevent-collision="true"
     >
       <grid-item
         v-for="item in layout"
@@ -42,17 +24,12 @@
         :i="item.i"
         :static="item.static"
         :is-draggable="item.isDraggable"
-        @moved="() => onMoved()"
-      >
-        <div style="width: 100%; height: 100%; text-align: center; border: 1px solid black">
-          <span>{{ item.i }} - {{ item.static }} - {{ item.isDraggable }}</span>
-        </div>
+        @move="onMove"
+        @moved="onMoved"
+      >   
       </grid-item>
     </grid-layout>
   </div>
-  <pre>
-    {{ layout }}
-  </pre>
 </template>
 
 <script lang="ts" setup>
@@ -69,15 +46,15 @@ const tileGameStyle = computed(() => {
 const tileGameContainer = ref<HtmlDivElement | null>(null)
 
 const layout = ref([
-  { x: 0, y: 0, w: 1, h: 1, i: '0', tile: '0' },
-  { x: 1, y: 0, w: 1, h: 1, i: '1', tile: '1' },
-  { x: 2, y: 0, w: 1, h: 1, i: '2', tile: '2' },
-  { x: 0, y: 1, w: 1, h: 1, i: '3', tile: '3' },
-  { x: 1, y: 1, w: 1, h: 1, i: '4', tile: '4' },
-  { x: 2, y: 1, w: 1, h: 1, i: '5', tile: '5' },
+  { x: 0, y: 1, w: 1, h: 1, i: '0', tile: '0' },
+  { x: 0, y: 0, w: 1, h: 1, i: '1', tile: '1' },
+  { x: 1, y: 1, w: 1, h: 1, i: '2', tile: '2' },
+  { x: 2, y: 1, w: 1, h: 1, i: '3', tile: '3' },
+  { x: 1, y: 2, w: 1, h: 1, i: '4', tile: '4' },
+  { x: 2, y: 0, w: 1, h: 1, i: '5', tile: '5' },
   { x: 0, y: 2, w: 1, h: 1, i: '6', tile: '6' },
-  { x: 1, y: 2, w: 1, h: 1, i: '7', tile: '7' },
-  { x: 2, y: 2, w: 1, h: 1, i: '8', tile: 'empty' }, // Empty - needs to be empty tile to allow for dragging on top of
+  { x: 2, y: 2, w: 1, h: 1, i: '7', tile: '7' },
+  { x: 1, y: 0, w: 1, h: 1, i: '8', tile: 'empty' }, // Empty tile
 ])
 
 const allowTileToMove = (x: number, y: number) => {
@@ -88,9 +65,37 @@ const allowTileToMove = (x: number, y: number) => {
   }
 }
 
-const onMoved = () => {
-  setupBoard()
+const onMove = (i: string, newX: number, newY: number) => {
+  let p
+  for (p = 0; p < layout.value.length; p++) {
+    //Horizontal swapping
+    if (
+      newX >= layout.value[p]['x'] &&
+      newX < layout.value[p]['x'] + layout.value[p]['w'] &&
+      layout.value[i]['y'] == layout.value[p]['y'] &&
+      i != layout.value[p]['i']
+    ) {
+      let initialX = layout.value[i]['x']
+      let finalX = layout.value[p]['x']
+      layout.value[i]['x'] = finalX
+      layout.value[p]['x'] = initialX
+    }
+    //Vertical swapping
+    if (
+      newY >= layout.value[p]['y'] &&
+      newY < layout.value[p]['y'] + 1 &&
+      layout.value[i]['x'] == layout.value[p]['x'] &&
+      i != layout.value[p]['i']
+    ) {
+      let initialY = layout.value[i]['y']
+      let finalY = layout.value[p]['y']
+      layout.value[i]['y'] = finalY
+      layout.value[p]['y'] = initialY
+    }
+  }
 }
+
+const onMoved = () => setupBoard()
 
 const setupBoard = () => {
   layout.value.forEach((item) => {
@@ -150,6 +155,10 @@ onMounted(() => {
   .tile {
     background: url(https://source.unsplash.com/900x900/?pets,cat,dogs,puppy,kitten);
     background-size: 300%;
+    border: 1px solid black;
+    width: 100%; 
+    height: 100%; 
+    text-align: center;
   }
   .tile--0 {
     background-position: top left;
@@ -178,6 +187,7 @@ onMounted(() => {
 
   .tile--empty {
     background: transparent;
+    border: none;
   }
 }
 </style>
