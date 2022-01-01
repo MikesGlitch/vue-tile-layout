@@ -66,32 +66,25 @@ const allowTileToMove = (x: number, y: number) => {
 }
 
 const onMove = (i: string, newX: number, newY: number) => {
-  let p
-  for (p = 0; p < layout.value.length; p++) {
-    //Horizontal swapping
-    if (
-      newX >= layout.value[p]['x'] &&
-      newX < layout.value[p]['x'] + layout.value[p]['w'] &&
-      layout.value[i]['y'] == layout.value[p]['y'] &&
-      i != layout.value[p]['i']
-    ) {
-      let initialX = layout.value[i]['x']
-      let finalX = layout.value[p]['x']
-      layout.value[i]['x'] = finalX
-      layout.value[p]['x'] = initialX
-    }
-    //Vertical swapping
-    if (
-      newY >= layout.value[p]['y'] &&
-      newY < layout.value[p]['y'] + 1 &&
-      layout.value[i]['x'] == layout.value[p]['x'] &&
-      i != layout.value[p]['i']
-    ) {
-      let initialY = layout.value[i]['y']
-      let finalY = layout.value[p]['y']
-      layout.value[i]['y'] = finalY
-      layout.value[p]['y'] = initialY
-    }
+  let layoutItemMovingFrom = layout.value[i]
+  
+  // it's only valid to move to the empty tile
+  let emptyTile = layout.value.find((layoutItem) => layoutItem.tile === 'empty')
+
+  const isMovingHorizontally = newX >= emptyTile.x && newX < emptyTile.x + emptyTile.w && layoutItemMovingFrom.y == emptyTile.y && i != emptyTile.i
+  if (isMovingHorizontally) {
+    let initialX = layoutItemMovingFrom.x
+    let finalX = emptyTile.x
+    layoutItemMovingFrom.x = finalX
+    emptyTile.x = initialX
+  }
+
+  const isMovingVertically = newY >= emptyTile.y && newY < emptyTile.y + 1 && layoutItemMovingFrom.x == emptyTile.x && i != emptyTile.i
+  if (isMovingVertically) {
+    let initialY = layoutItemMovingFrom.y
+    let finalY = emptyTile.y
+    layoutItemMovingFrom.y = finalY
+    emptyTile.y = initialY
   }
 }
 
