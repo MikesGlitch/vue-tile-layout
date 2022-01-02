@@ -2,7 +2,7 @@ import { defineUserConfig } from 'vuepress'
 import type { DefaultThemeOptions } from 'vuepress'
 
 export default defineUserConfig<DefaultThemeOptions>({
-  base: '/vue-griddy/',
+  base: '/vue-tile-layout/',
   bundler: '@vuepress/bundler-vite',
   bundlerConfig: {
     viteOptions: {
