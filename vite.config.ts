@@ -12,8 +12,8 @@ export default defineConfig({
   build: {
     lib: {
       entry: path.resolve(__dirname, 'src/components/index.ts'),
-      name: 'VueGriddy',
-      fileName: (format) => `vue-griddy.${format}.js`,
+      name: 'VueTileLayout',
+      fileName: (format) => `vue-tile-layout.${format}.js`,
     },
     rollupOptions: {
       // make sure to externalize deps that shouldn't be bundled

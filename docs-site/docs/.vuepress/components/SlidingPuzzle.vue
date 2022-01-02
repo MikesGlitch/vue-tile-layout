@@ -34,7 +34,7 @@
 
 <script lang="ts" setup>
 import { ref, computed, onMounted } from 'vue'
-import { GridLayout, GridItem } from 'vue-griddy'
+import { GridLayout, GridItem } from 'vue-tile-layout'
 
 const tileWidth = ref(100)
 const numTiles = 3

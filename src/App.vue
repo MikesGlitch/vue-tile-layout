@@ -11,7 +11,6 @@
     <li>Responsive mode doesn't work with over 12 cols. It's very annoying. Fix it.</li>
     <li>Good idea for an example - slider puzzle.</li>
     <li>Good idea for an example - Dashboard widgets.</li>
-    <li>Rename the library - VueTile? VueGriddy? Vue-DraggableResizableLayout</li>
     <li>Bit of inspiration https://github.com/react-grid-layout/react-grid-layout</li>
     <li>
       I think whatever we do we'll need to use an event bus. There's now ay to use emit since we don't have access to

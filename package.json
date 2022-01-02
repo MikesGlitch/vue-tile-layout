@@ -1,14 +1,14 @@
 {
-  "name": "vue-griddy",
+  "name": "vue-tile-layout",
   "version": "0.0.0",
-  "main": "./dist/vue-griddy.umd.js",
-  "module": "./dist/vue-griddy.es.js",
+  "main": "./dist/vue-tile-layout.umd.js",
+  "module": "./dist/vue-tile-layout.es.js",
   "files": ["dist"],
   "types": "./src/index.d.ts",
   "exports": {
     ".": {
-      "import": "./dist/vue-griddy.es.js",
-      "require": "./dist/vue-griddy.umd.js"
+      "import": "./dist/vue-tile-layout.es.js",
+      "require": "./dist/vue-tile-layout.umd.js"
     },
     "./style": "./dist/style.css"
   },
