@@ -25,42 +25,19 @@ features:
 footer: MIT Licensed | Copyright © 2018-present Evan You
 ---
 
-### As Easy as 1, 2, 3
+### Easy to get started
 
 <CodeGroup>
-  <CodeGroupItem title="YARN" active>
-
-```bash
-# install in your project
-yarn add -D vuepress@next
-
-# create a markdown file
-echo '# Hello VuePress' > README.md
-
-# start writing
-yarn vuepress dev
-
-# build to static files
-yarn vuepress build
-```
-
-  </CodeGroupItem>
-
   <CodeGroupItem title="NPM">
-  
-```bash
-# install in your project
-npm install -D vuepress@next
-
-# create a markdown file
-echo '# Hello VuePress' > README.md
-
-# start writing
-npx vuepress dev
-
-# build to static files
-npx vuepress build
-```
-
+    ```bash
+    # install in your project
+    npm install vue-tile-layout
+    ```
+  </CodeGroupItem>
+  <CodeGroupItem title="Vue" active>
+    ```vue
+    # Import the library
+    import VueTileLayout from 'vue-tile-layout'
+    ```
   </CodeGroupItem>
 </CodeGroup>

@@ -14,8 +14,8 @@ export default defineUserConfig<DefaultThemeOptions>({
     },
   },
   lang: 'en-US',
-  title: 'Hello VuePress',
-  description: 'Just playing around',
+  title: 'Vue Tile Layout',
+  description: 'A tile layout system for Vue that enables users to drag, drop and resize tiles with ease.',
 
   themeConfig: {
     logo: 'https://vuejs.org/images/logo.png',
