@@ -27,17 +27,12 @@ footer: MIT Licensed | Copyright © 2018-present Evan You
 
 ### Easy to get started
 
-<CodeGroup>
-  <CodeGroupItem title="NPM">
-    ```bash
-    # install in your project
-    npm install vue-tile-layout
-    ```
-  </CodeGroupItem>
-  <CodeGroupItem title="Vue" active>
-    ```vue
-    # Import the library
-    import VueTileLayout from 'vue-tile-layout'
-    ```
-  </CodeGroupItem>
-</CodeGroup>
+**Install in your project**
+```bash
+npm install vue-tile-layout
+```
+
+**Import the library**
+```vue
+import VueTileLayout from 'vue-tile-layout'
+```
