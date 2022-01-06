@@ -9,6 +9,6 @@
     "nuxt3": "latest"
   },
   "dependencies": {
-    "vue-tile-layout": "file:../.."
+    "vue-tile-layout": "^0.0.1-alpha.1"
   }
 }
