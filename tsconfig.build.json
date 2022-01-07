@@ -1,0 +1,9 @@
+// This file is used to build the typescript definitions for the lib
+{
+  "extends": "./tsconfig",
+  "compilerOptions": {
+    "declaration": true,
+    "outDir": "types"
+  },
+  "include": ["src/components/*"]
+}

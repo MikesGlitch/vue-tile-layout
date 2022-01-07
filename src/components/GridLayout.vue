@@ -49,9 +49,7 @@ import {
 
 import GridItem from './GridItem.vue'
 import { DragItemEvent, Events, ResizeItemEvent } from '@/helpers/eventBus'
-// import { GridLayoutProps } from './GridLayout'
 
-// const props: Readonly<GridLayoutProps> = defineProps({
 const props = defineProps({
   // If true, the container height swells and contracts to fit contents
   autoSize: {
