@@ -1,6 +1,6 @@
 <template>
   <div ref="tileGameContainer">
-    <grid-layout
+    <GridLayout
       v-model:layout="layout"
       class="tile-game"
       :style="tileGameStyle"
@@ -13,7 +13,7 @@
       :row-height="tileWidth"
       :prevent-collision="true"
     >
-      <grid-item
+      <GridItem
         v-for="item in layout"
         :key="item.i"
         :class="`tile tile--${item.tile}`"
@@ -27,8 +27,8 @@
         @move="onMove"
         @moved="onMoved"
       >   
-      </grid-item>
-    </grid-layout>
+      </GridItem>
+    </GridLayout>
   </div>
 </template>
 
