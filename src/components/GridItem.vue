@@ -26,7 +26,7 @@ import {
   SetResizableEvent,
   SetRowHeightEvent,
   UpdateWidthEvent,
-} from '@/helpers/eventBus'
+} from '@/components/eventBus'
 
 const emit = defineEmits<{
   (e: 'container-resized', i: string, h: number, w: number, height: number, width: number): void
@@ -421,7 +421,7 @@ const emitContainerResized = () => {
   emit('container-resized', props.i, props.h, props.w, styleProps.height, styleProps.width)
 }
 
-const handleResize = (event: MouseEvent) => {
+const handleResize = (event: any) => {
   if (props.static) return
   const position = getControlPosition(event)
   // Get the current drag point from the event. This is used as the offset.
@@ -507,7 +507,7 @@ const handleResize = (event: MouseEvent) => {
   })
 }
 
-const handleDrag = (event: MouseEvent) => {
+const handleDrag = (event: any) => {
   if (props.static) return
   if (isResizing.value) return
   const position = getControlPosition(event)
@@ -520,8 +520,8 @@ const handleDrag = (event: MouseEvent) => {
     case 'dragstart': {
       previousX = innerX
       previousY = innerY
-      let parentRect = ((event.target as HTMLElement).offsetParent as any).getBoundingClientRect()
-      let clientRect = (event.target as HTMLElement).getBoundingClientRect()
+      let parentRect = event.target.offsetParent.getBoundingClientRect()
+      let clientRect = event.target.getBoundingClientRect()
       if (layout.isMirrored) {
         newPosition.left = (clientRect.right - parentRect.right) * -1
       } else {
@@ -534,8 +534,8 @@ const handleDrag = (event: MouseEvent) => {
     }
     case 'dragend': {
       if (!isDragging.value) return
-      let parentRect = ((event.target as HTMLElement).offsetParent as any).getBoundingClientRect()
-      let clientRect = (event.target as HTMLElement).getBoundingClientRect()
+      let parentRect = event.target.offsetParent.getBoundingClientRect()
+      let clientRect = event.target.getBoundingClientRect()
       //                        Add rtl support
       if (layout.isMirrored) {
         newPosition.left = (clientRect.right - parentRect.right) * -1

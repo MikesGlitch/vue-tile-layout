@@ -37,7 +37,7 @@ import {
 } from '@/helpers/responsiveUtils'
 
 import GridItem from './GridItem.vue'
-import { DragItemEvent, Events, ResizeItemEvent } from '@/helpers/eventBus'
+import { DragItemEvent, Events, ResizeItemEvent } from '@/components/eventBus'
 
 const props = defineProps({
   // If true, the container height swells and contracts to fit contents
