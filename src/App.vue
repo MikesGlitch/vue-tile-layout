@@ -119,6 +119,7 @@
 import { ref } from 'vue'
 import GridItem from './components/GridItem.vue'
 import GridLayout from './components/GridLayout.vue'
+import { Layout } from './components/LayoutTypes'
 
 const containerWidth = ref(100)
 
@@ -145,7 +146,7 @@ const reloadWithDelay = () => {
   }, 3000)
 }
 
-const layout = ref([
+const layout = ref<Layout>([
   { x: 0, y: 0, w: 2, h: 2, i: '0' },
   { x: 2, y: 0, w: 2, h: 4, i: '1' },
   { x: 4, y: 0, w: 2, h: 5, i: '2' },

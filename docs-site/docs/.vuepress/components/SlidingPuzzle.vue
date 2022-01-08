@@ -35,6 +35,7 @@
 <script lang="ts" setup>
 import { ref, computed, onMounted } from 'vue'
 import { GridLayout, GridItem } from 'vue-tile-layout'
+import { Layout } from 'vue-tile-layout/types/components/LayoutTypes'
 
 const tileWidth = ref(100)
 const numTiles = 3
@@ -45,8 +46,7 @@ const tileGameStyle = computed(() => {
 
 const tileGameContainer = ref<HTMLDivElement | null>(null)
 
-// Todo - get the types
-const layout = ref<{ x: number, y: number, w: number, h: number, i: string, tile: string, static?: boolean, isDraggable?: boolean }[]>([
+const layout = ref<Layout>([
   { x: 0, y: 1, w: 1, h: 1, i: '0', tile: '0' },
   { x: 0, y: 0, w: 1, h: 1, i: '1', tile: '1' },
   { x: 1, y: 1, w: 1, h: 1, i: '2', tile: '2' },

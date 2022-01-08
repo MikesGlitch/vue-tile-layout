@@ -1,24 +1,4 @@
-/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 /* eslint-disable @typescript-eslint/ban-types */
-// @flow
-export type LayoutItemRequired = {
-  w: number
-  h: number
-  x: number
-  y: number
-  i: string
-}
-export type LayoutItem = LayoutItemRequired & {
-  minW?: number
-  minH?: number
-  maxW?: number
-  maxH?: number
-  moved?: boolean
-  static?: boolean
-  isDraggable?: boolean
-  isResizable?: boolean
-}
-export type Layout = Array<LayoutItem>
 // export type Position = {left: number, top: number, width: number, height: number};
 /*
 export type DragCallbackData = {
@@ -28,6 +8,9 @@ export type DragCallbackData = {
   lastX: number, lastY: number
 };
 */
+
+import { Layout, LayoutItem, LayoutItemRequired } from '@/components/LayoutTypes'
+
 // export type DragEvent = {e: Event} & DragCallbackData;
 export type Size = { width: number; height: number }
 // export type ResizeEvent = {e: Event, node: HTMLElement, size: Size};
@@ -74,7 +57,7 @@ export function cloneLayoutItem(layoutItem: LayoutItem): LayoutItem {
  *
  * @return {Boolean}   True if colliding.
  */
-export function collides(l1: LayoutItem, l2: LayoutItem): boolean {
+export function collides(l1: LayoutItemRequired, l2: LayoutItemRequired): boolean {
   if (l1 === l2) return false // same element
   if (l1.x + l1.w <= l2.x) return false // l1 is left of l2
   if (l1.x >= l2.x + l2.w) return false // l1 is right of l2
@@ -191,7 +174,7 @@ export function getLayoutItem(layout: Layout, id?: string): LayoutItem | undefin
  * @param  {Object} layoutItem Layout item.
  * @return {Object|undefined}  A colliding layout item, or undefined.
  */
-export function getFirstCollision(layout: Layout, layoutItem: LayoutItem): LayoutItem | undefined {
+export function getFirstCollision(layout: Layout, layoutItem: LayoutItemRequired): LayoutItem | undefined {
   for (let i = 0, len = layout.length; i < len; i++) {
     if (collides(layout[i], layoutItem)) return layout[i]
   }
@@ -302,7 +285,7 @@ export function moveElementAwayFromCollision(
   // unwanted swapping behavior.
   if (isUserAction) {
     // Make a mock item so we don't modify the item here, only modify in moveElement.
-    const fakeItem: LayoutItem = {
+    const fakeItem: LayoutItemRequired = {
       x: itemToMove.x,
       y: itemToMove.y,
       w: itemToMove.w,
