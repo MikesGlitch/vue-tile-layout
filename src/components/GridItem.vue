@@ -9,7 +9,7 @@
 import { setTopLeft, setTopRight, setTransformRtl, setTransform } from '@/helpers/utils'
 import { getControlPosition, createCoreData } from '@/helpers/draggableUtils'
 import { getColsFromBreakpoint } from '@/helpers/responsiveUtils'
-import { defineProps, inject, ref, computed, watch, onBeforeUnmount, onMounted, defineEmits } from 'vue'
+import { inject, ref, computed, watch, onBeforeUnmount, onMounted } from 'vue'
 
 import '@interactjs/auto-start/index.prod'
 import '@interactjs/actions/drag/index.prod'

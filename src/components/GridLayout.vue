@@ -15,18 +15,7 @@
 
 <script lang="ts" setup>
 import mitt from 'mitt'
-import {
-  defineProps,
-  watch,
-  nextTick,
-  defineEmits,
-  onBeforeUnmount,
-  onBeforeMount,
-  onMounted,
-  ref,
-  reactive,
-  provide,
-} from 'vue'
+import { watch, nextTick, onBeforeUnmount, onBeforeMount, onMounted, ref, reactive, provide } from 'vue'
 
 import { useResizeObserver } from '@vueuse/core'
 

@@ -10,6 +10,11 @@ module.exports = {
     '@vue/prettier',
     '@vue/prettier/@typescript-eslint',
   ],
+  globals: {
+    defineEmits: 'readonly', // compiler macro and no longer needs to be imported
+    defineExpose: 'readonly', // compiler macro and no longer needs to be imported
+    defineProps: 'readonly', // compiler macro and no longer needs to be imported
+  },
   parserOptions: {
     ecmaVersion: 2020,
   },
