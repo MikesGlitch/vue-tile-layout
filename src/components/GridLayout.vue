@@ -124,7 +124,6 @@ provide('eventBus', eventBus)
 provide('layout', props)
 const width = ref<number>(100) // default 100 - same on grid item
 const mergedStyle = ref({})
-let lastLayoutLength = 0
 const isDragging = ref(false)
 const placeholder = reactive<LayoutItemRequired>({
   x: 0,
@@ -284,7 +283,6 @@ const layoutUpdate = () => {
         }
       }
 
-      lastLayoutLength = props.layout.length
       initResponsiveFeatures()
     }
 
