@@ -15,7 +15,7 @@
 
 <script lang="ts" setup>
 import mitt from 'mitt'
-import { watch, nextTick, onBeforeUnmount, onBeforeMount, onMounted, ref, reactive, provide } from 'vue'
+import { watch, nextTick, onBeforeUnmount, onBeforeMount, onMounted, ref, reactive, provide, PropType } from 'vue'
 
 import { useResizeObserver } from '@vueuse/core'
 
@@ -27,7 +27,6 @@ import {
   validateLayout,
   cloneLayout,
   getAllCollisions,
-  LayoutItemRequired,
 } from '@/helpers/utils'
 
 import {
@@ -38,6 +37,7 @@ import {
 
 import GridItem from './GridItem.vue'
 import { DragItemEvent, Events, ResizeItemEvent } from '@/components/eventBus'
+import { LayoutItemRequired, Layout } from './LayoutTypes'
 
 const props = defineProps({
   // If true, the container height swells and contracts to fit contents
@@ -84,7 +84,7 @@ const props = defineProps({
     default: true,
   },
   layout: {
-    type: Array,
+    type: Array as PropType<Layout>,
     required: true,
   },
   responsive: {
@@ -242,12 +242,12 @@ onBeforeMount(() => {
 
 onMounted(() => {
   emit('layout-mounted', props.layout)
-  nextTick(function () {
+  nextTick(() => {
     validateLayout(props.layout as any)
 
     originalLayout = props.layout
     // eslint-disable-next-line @typescript-eslint/no-this-alias
-    nextTick(function () {
+    nextTick(() => {
       onContainerResize()
       initResponsiveFeatures()
 
@@ -256,11 +256,7 @@ onMounted(() => {
       emit('layout-updated', props.layout)
 
       updateHeight()
-      nextTick(function () {
-        useResizeObserver(item.value, () => {
-          onContainerResize()
-        })
-      })
+      nextTick(() => useResizeObserver(item.value, () => onContainerResize()))
     })
   })
 })
@@ -412,8 +408,9 @@ const responsiveGridLayout = () => {
   let newCols = getColsFromBreakpoint(newBreakpoint, props.cols)
 
   // save actual layout in layouts
-  if (lastBreakpoint != null && !(layouts as any)[lastBreakpoint])
-    (layouts as any)[lastBreakpoint] = cloneLayout(props.layout as any)
+  if (lastBreakpoint != null && !(layouts as any)[lastBreakpoint]) {
+    layouts[lastBreakpoint] = cloneLayout(props.layout as any)
+  }
 
   // Find or generate a new layout.
   let layout = findOrGenerateResponsiveLayout(
@@ -450,16 +447,12 @@ const initResponsiveFeatures = () => {
 const findDifference = (layout: unknown[], originalLayout: any[]) => {
   //Find values that are in result1 but not in result2
   let uniqueResultOne = layout.filter((obj: any) => {
-    return !originalLayout.some(function (obj2: { i: any }) {
-      return obj.i === obj2.i
-    })
+    return !originalLayout.some((obj2: { i: any }) => obj.i === obj2.i)
   })
 
   //Find values that are in result2 but not in result1
   let uniqueResultTwo = originalLayout.filter((obj: any) => {
-    return !layout.some((obj2: any) => {
-      return obj.i === obj2.i
-    })
+    return !layout.some((obj2: any) => obj.i === obj2.i)
   })
 
   //Combine the two arrays of unique entries#

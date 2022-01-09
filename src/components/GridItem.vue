@@ -27,6 +27,7 @@ import {
   SetRowHeightEvent,
   UpdateWidthEvent,
 } from '@/components/eventBus'
+import { LayoutItemInjectable } from './LayoutTypes'
 
 const emit = defineEmits<{
   (e: 'container-resized', i: string, h: number, w: number, height: number, width: number): void
@@ -36,7 +37,7 @@ const emit = defineEmits<{
   (e: 'moved', i: string, x: number, y: number): void
 }>()
 
-const props = defineProps({
+const props: Readonly<LayoutItemInjectable> = defineProps({
   isDraggable: {
     type: Boolean,
     required: false,

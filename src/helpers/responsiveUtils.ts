@@ -1,8 +1,8 @@
 // @flow
 
+import { Layout } from '@/components/LayoutTypes'
 import { cloneLayout, compact, correctBounds } from './utils'
 
-import type { Layout } from './utils'
 export type ResponsiveLayout = {
   lg?: Layout
   md?: Layout
@@ -26,16 +26,12 @@ type Breakpoints = {
  * @param  {Number} width Screen width.
  * @return {String}       Highest breakpoint that is less than width.
  */
-export function getBreakpointFromWidth(
-  breakpoints: Breakpoints,
-  width: number
-): Breakpoint {
+export function getBreakpointFromWidth(breakpoints: Breakpoints, width: number): Breakpoint {
   const sorted = sortBreakpoints(breakpoints)
   let matching = sorted[0]
   for (let i = 1, len = sorted.length; i < len; i++) {
     const breakpointName = sorted[i]
-    if (width > (breakpoints as unknown as any)[breakpointName])
-      matching = breakpointName
+    if (width > (breakpoints as unknown as any)[breakpointName]) matching = breakpointName
   }
   return matching
 }
@@ -46,16 +42,9 @@ export function getBreakpointFromWidth(
  * @param  {Object} cols       Map of breakpoints to cols.
  * @return {Number}            Number of cols.
  */
-export function getColsFromBreakpoint(
-  breakpoint: Breakpoint,
-  cols: Breakpoints
-): number {
+export function getColsFromBreakpoint(breakpoint: Breakpoint, cols: Breakpoints): number {
   if (!(cols as unknown as any)[breakpoint]) {
-    throw new Error(
-      'ResponsiveGridLayout: `cols` entry for breakpoint ' +
-        breakpoint +
-        ' is missing!'
-    )
+    throw new Error('ResponsiveGridLayout: `cols` entry for breakpoint ' + breakpoint + ' is missing!')
   }
   return (cols as unknown as any)[breakpoint]
 }
@@ -85,15 +74,12 @@ export function findOrGenerateResponsiveLayout(
   verticalCompact: boolean
 ): Layout {
   // If it already exists, just return it.
-  if ((layouts as unknown as any)[breakpoint])
-    return cloneLayout((layouts as unknown as any)[breakpoint])
+  if ((layouts as unknown as any)[breakpoint]) return cloneLayout((layouts as unknown as any)[breakpoint])
   // Find or generate the next layout
   let layout = orgLayout
 
   const breakpointsSorted = sortBreakpoints(breakpoints)
-  const breakpointsAbove = breakpointsSorted.slice(
-    breakpointsSorted.indexOf(breakpoint)
-  )
+  const breakpointsAbove = breakpointsSorted.slice(breakpointsSorted.indexOf(breakpoint))
   for (let i = 0, len = breakpointsAbove.length; i < len; i++) {
     const b = breakpointsAbove[i]
     if ((layouts as unknown as any)[b]) {
@@ -140,8 +126,6 @@ export function generateResponsiveLayout(
 export function sortBreakpoints(breakpoints: Breakpoints): Array<Breakpoint> {
   const keys: Array<string> = Object.keys(breakpoints)
   return keys.sort(function (a, b) {
-    return (
-      (breakpoints as unknown as any)[a] - (breakpoints as unknown as any)[b]
-    )
+    return (breakpoints as unknown as any)[a] - (breakpoints as unknown as any)[b]
   })
 }
