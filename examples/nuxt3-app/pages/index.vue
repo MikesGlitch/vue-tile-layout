@@ -84,7 +84,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { GridLayout, GridItem } from 'vue-tile-layout'
+import { GridLayout, GridItem, Layout } from 'vue-tile-layout'
 import 'vue-tile-layout/style'
 
 const containerWidth = ref(100)
@@ -103,7 +103,7 @@ const layoutSettings = ref({
   useStyleCursor: true,
 })
 
-const layout = ref([
+const layout = ref<Layout>([
   { x: 0, y: 0, w: 2, h: 2, i: '0' },
   { x: 2, y: 0, w: 2, h: 4, i: '1' },
   { x: 4, y: 0, w: 2, h: 5, i: '2' },

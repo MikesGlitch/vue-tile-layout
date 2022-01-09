@@ -13,10 +13,10 @@ export interface LayoutItem extends LayoutItemRequired {
   maxH?: number
   moved?: boolean
   static?: boolean
-  isDraggable?: boolean | null
-  isResizable?: boolean | null
+  isDraggable?: boolean
+  isResizable?: boolean
   dragIgnoreFrom?: string
-  dragAllowFrom?: string | null
+  dragAllowFrom?: string
   resizeIgnoreFrom?: string
   preserveAspectRatio?: boolean
   [key: string]: unknown
