@@ -1,5 +1,3 @@
-# vue-tile-layout
-
 <p align="center">
     <a href="https://www.npmjs.com/package/vue-tile-layout">
         <img src="https://img.shields.io/npm/v/vue-tile-layout.svg"/> 
