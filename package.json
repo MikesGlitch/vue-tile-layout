@@ -1,6 +1,12 @@
 {
   "name": "vue-tile-layout",
-  "version": "0.0.1-alpha.4",
+  "version": "0.0.1-alpha.5",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/MikesGlitch/vue-tile-layout.git"
+  },
+  "author": "Michael Clark (MikesGlitch) <mclarkgb@gmail.com> (https://mikesglitch.com)",
+  "homepage": "https://github.com/MikesGlitch/vue-tile-layout",
   "main": "./dist/vue-tile-layout.umd.js",
   "module": "./dist/vue-tile-layout.es.js",
   "files": [
