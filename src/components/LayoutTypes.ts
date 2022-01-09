@@ -19,6 +19,7 @@ export interface LayoutItem extends LayoutItemRequired {
   dragAllowFrom?: string | null
   resizeIgnoreFrom?: string
   preserveAspectRatio?: boolean
+  [key: string]: unknown
 }
 
 export interface LayoutItemInjectable extends LayoutItemRequired {
@@ -35,7 +36,8 @@ export interface LayoutItemInjectable extends LayoutItemRequired {
   dragAllowFrom: string | null
   resizeIgnoreFrom: string
   preserveAspectRatio: boolean
-  [key: string]: any
 }
 
 export type Layout = Array<LayoutItem>
+
+// Split this up into two? GridLayout and GridLayoutItem
