@@ -2,6 +2,7 @@
   <h1>DON'T FORGET TO TAKE FROM THE VUE3 BRANCH OF VUE-GRID-LAYOUT</h1>
   <h5>TODOS:</h5>
   <ul>
+    <li>TileLayout Try make the responsive col layout look nicer when hitting breakpoints</li>
     <li>Try to add documentation to props and events etc via typescript (for intellisense)</li>
     <li>Vuepress website with code integration into the library - will be used for examples</li>
     <li>Copy from gridstack API and make this code better</li>
