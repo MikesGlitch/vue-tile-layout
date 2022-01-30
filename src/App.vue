@@ -27,6 +27,7 @@
       Fix the nuxt 3 app example - ice not working when doing a build, then preview with SSR bundle. Something to do
       with vue duplication
     </li>
+    <li>https://github.com/jbaysolutions/vue-grid-layout/issues/608#issuecomment-1024365974</li>
   </ul>
 
   <div>
