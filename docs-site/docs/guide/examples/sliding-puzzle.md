@@ -4,7 +4,7 @@ This example features:
 - Tile dragging and repositioning with custom rules.  A tile can only be moved to the empty position.  No resizing allowed
 - A mix of static/nonstatic draggable/nondraggable items
 - Custom move logic for sliding/replacing tiles with empty one
-- max rows - ensuring the square - positioning items within the limits
+- Max rows - ensuring the square - positioning items within the limits
 
 <ClientOnly>
   <SlidingPuzzle />
