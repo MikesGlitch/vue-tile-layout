@@ -11,6 +11,7 @@
 
 # TODO:
 - Rebuild this in WebComponents and create a Vue component that wraps it
+- Make a React wrapper as well
 
 ## What is Vue Tile Layout?
 
