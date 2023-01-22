@@ -10,8 +10,8 @@
 
 
 # TODO:
-- Rebuild this in WebComponents and create a Vue component that wraps it
-- Make a React wrapper as well
+- Rebuild this in WebComponents
+- Make a Vue/React/Angular component that wraps it
 
 ## What is Vue Tile Layout?
 
