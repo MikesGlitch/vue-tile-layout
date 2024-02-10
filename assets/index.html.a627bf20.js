@@ -1,0 +1,1 @@
+const e={key:"v-ba5104cc",path:"/guide/examples/",title:"readme",lang:"en-US",frontmatter:{},excerpt:"",headers:[],git:{updatedTime:1707603183e3,contributors:[{name:"Michael Clark",email:"5285928+MikesGlitch@users.noreply.github.com",commits:1}]},filePathRelative:"guide/examples/README.md"};export{e as data};
