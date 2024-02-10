@@ -15,4 +15,4 @@
 
 ## What is Vue Tile Layout?
 
-vue-tile-layout is the spiritual successor to vue-grid-layout - the main difference in that it has full vue 3 support.  vue-tile-layout is a layout system, like [Gridster](http://dsmorse.github.io/gridster.js/), for Vue.js. **Heavily inspired by [React-Grid-Layout](https://github.com/STRML/react-grid-layout)**
+vue-tile-layout is the spiritual successor to vue-grid-layout - the main difference in that it has full Vue 3 support.  vue-tile-layout is a layout system, like [Gridster](http://dsmorse.github.io/gridster.js/), for Vue.js. **Heavily inspired by [React-Grid-Layout](https://github.com/STRML/react-grid-layout)**
